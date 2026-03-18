@@ -1,48 +1,45 @@
 from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import sessionmaker, declarative_base
+import os
+from dotenv import load_dotenv
 
 # La Base constructora se deja afuera de la clase por estándar de SQLAlchemy
+load_dotenv()
 Base = declarative_base()
 
 class GestorBaseDatos:
-    db_local="sqlite:///mercadolibre_precios.db"
-
-    db= GestorBaseDatos(url_conexion=url_local)
-    db_aws=""
-    def __init__(self):
-        self.usuario="postgres"
-        self.password="scraper22sopa"
-        self.host="scraper-ml-server.ckh0a0maehqt.us-east-1.rds.amazonaws.com"
-        # Guardamos la URL de conexión (fácil de cambiar a AWS luego)
-        self.port="5432"
-        self.database_name="mercadolibre_db"
-        self.url = f"postgresql+psycopg2://{self.usuario}:{self.password}@{self.host}:{self.port}/{self.database_name}?sslmode=require"
-        
-        self.engine = None
-        self.SessionLocal = None
-
-    def conectar(self):
-        print(f"📡 Intentando enlace con servidor AWS en {self.host}...")
-        
-        try:
-            # Creamos el motor con la URL de la nube
-            self.engine = create_engine(self.url, echo=False)
-            
-            # Prueba de "Ping" real a la nube
-            with self.engine.connect() as conexion:
-                print("✅ ¡Conexión exitosa a AWS! El túnel de datos está abierto.")
-            
-            self.SessionLocal = sessionmaker(bind=self.engine)
-            return True
-            
-        except OperationalError as e:
-            print("❌ Error de Conexión: No se pudo alcanzar el servidor de AWS.")
-            print("🔍 Tip de ingeniería: Verifica que el 'Security Group' en AWS permita tráfico desde tu IP.")
-            print(f"Detalle: {e}")
-            return False
     
 
-if __name__ == "__main__":
-    db = GestorBaseDatos()
-    db.conectar()
+    
+    def __init__(self):
+        self.usuario=os.getenv("DB_USUARIO")
+        self.password=os.getenv("DB_PASSWORD")
+        self.host=os.getenv("DB_HOST")
+        # Guardamos la URL de conexión (fácil de cambiar a AWS luego)
+        self.port=os.getenv("DB_PORT")
+        self.database_name=os.getenv("DB_NAME")
+        self.url = f"postgresql+psycopg2://{self.usuario}:{self.password}@{self.host}:{self.port}/{self.database_name}?sslmode=require"
+        
+        self.engine = create_engine(self.url)
+        
+        Base.metadata.create_all(self.engine)
+
+        ClaseSesion=sessionmaker(bind=self.engine)
+        self.sesion=ClaseSesion()
+
+        print("✅ Conexión a AWS exitosa.")
+
+
+    def insertar(self, objeto):
+        self.sesion.add(objeto)
+        self.sesion.commit()
+        print(f"Registro insertado: {objeto}")
+    
+    def obtener_por_columna(self, modelo, nombre_columna, valor_a_buscar):
+        columna_exacta=getattr(modelo, nombre_columna)
+        return self.sesion.query(modelo).filter(columna_exacta==valor_a_buscar).first()
+    
+    def cerrar_sesion(self):
+        self.sesion.close()
+        print("Sesion cerrada")
