@@ -1,0 +1,11 @@
+# Entorno virtual y caché de Python (Back-end)
+venv/
+env/
+__pycache__/
+*.pyc
+.env
+
+# Dependencias de la interfaz (Front-end)
+node_modules/
+dist/
+.DS_Store
