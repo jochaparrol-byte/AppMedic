@@ -1,11 +1,9 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
-from sqlalchemy.orm import relationship, declarative_base
 from models import Usuario, Medico, Paciente, Citas
 import bcrypt
 
 #print(bcrypt.__version__)
 
-Base=declarative_base()
+
 
 class GestorAuth:
 
@@ -13,9 +11,41 @@ class GestorAuth:
     def __init__(self, gestor_bd):
         self.db=gestor_bd
     
-    def registrar_usuario(self, nombre, especialidad, password):#pensar en como agregar el resto de informacion
-        bytes_password=password.encode('utf-8')
+    def registrar_usuario(self, email, password, rol, datos_perfil):#pensar en como agregar el resto de informacion
         
+        password_enc = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')  #mas por seguridad que por otra cosa. Se toma la contraseña, se convierte en binario para poder agregar los aditivos de seguridad(simbolos "aleatorios", y un identificador para cada contraseña(asi la contraseña sea igual en dos usuarios, la contraseña se vera diferente) asi como tambien la hace interpretable aunque tenga caracteres especiales como "ñ" y demas) y por ultimo la convierte en un string para que sea posible guardarla en la base de datos sin problema
+
+        try:
+            usuario_nuevo=Usuario(email=email, password=password_enc, rol=rol)
+            self.db.sesion.add(usuario_nuevo)
+            self.db.sesion.flush()
+
+            if rol == 'medico':
+                perfil = Medico(
+                
+                tarjeta_profesional=datos_perfil['tarjeta_profesional'],
+                nombre_completo=datos_perfil['nombre_completo'],
+                documento_identidad=123456,
+                especialidad=datos_perfil['especialidad']
+            )
+            elif rol == 'paciente':
+                perfil = Paciente(
+                nombre_recibido=datos_perfil['nombre'],
+                tipo_sangre_recibido=datos_perfil['tipo_sangre'],
+                usuario_id_recibido=usuario_nuevo.id
+            )
+            perfil.usuario_id = usuario_nuevo.id
+            self.db.sesion.commit()
+            return "registro exitoso"
+
+        except Exception as error:
+            self.db.sesion.rollback()
+            print(f"Error durante el registro{error}")
+            return "Error al registrar el usuario"
+            
+        
+
+
     def iniciar_sesion(self, correo, contrasena_intento):
 
         usuario=self.db.obtener_por_columna(Usuario, "email", correo)
@@ -25,4 +55,3 @@ class GestorAuth:
         if usuario.verificar_password(contrasena_intento):
             return usuario, "Logeo exitoso"
         return None, "Credenciales incorrectas"
-
