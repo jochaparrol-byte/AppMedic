@@ -1,46 +1,119 @@
-//npm run dev para iniciar el servidor
-import { useState } from 'react';
-import { Container, Box, Typography, TextField, Button, Paper, Avatar, Link, Divider } from '@mui/material';
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import GoogleIcon from '@mui/icons-material/Google';
+import React, { useState } from 'react';
+import { 
+  Container, Box, Typography, TextField, 
+  Button, Paper, Avatar, Card, Tabs, Tab, Link 
+} from '@mui/material';
+
+// colores para el proyecto
+const NAVY = '#2F4156';
+const TEAL = '#567C8D';
+const SKY_BLUE = '#C8D9E6';
+const BEIGE = '#f1edea';
 
 function App() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // Estado para controlar si entra un paciente o personal
+  const [tabActual, setTabActual] = useState(0);
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await fetch('http://localhost:8000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      const result = await response.json();
-      alert(result.message || "Acceso procesado");
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const cambiarTab = (event, nuevoValor) => {
+    setTabActual(nuevoValor);
   };
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 8 }}>
-      <Paper elevation={3} sx={{ p: 4, textAlign: 'center', borderRadius: 5 }}>
-        <Avatar sx={{ m: 'auto', bgcolor: '#00796B', width: 60, height: 60, mb: 2 }}>
-          <LocalHospitalIcon sx={{ fontSize: 35 }} />
-        </Avatar>
-        <Typography variant="h4" sx={{ color: '#00796B', fontWeight: 'bold', mb: 3 }}>Login</Typography>
-        <Box component="form" onSubmit={handleLogin}>
-          <TextField fullWidth label="Email*" variant="standard" margin="normal" onChange={(e) => setEmail(e.target.value)} />
-          <TextField fullWidth label="Password" type="password" variant="standard" margin="normal" onChange={(e) => setPassword(e.target.value)} />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 4, mb: 2, borderRadius: 2, py: 1.5, bgcolor: '#00796B' }}>Sign Up</Button>
-          <Link href="#" variant="body2" color="textSecondary" underline="none">Forgot Password?</Link>
-          <Divider sx={{ my: 3 }}>Or</Divider>
-          <Button fullWidth variant="contained" startIcon={<FacebookIcon />} sx={{ mb: 2, bgcolor: '#3b5998', textTransform: 'none' }}>Facebook</Button>
-          <Button fullWidth variant="contained" startIcon={<GoogleIcon />} sx={{ bgcolor: '#DB4437', textTransform: 'none' }}>Google</Button>
+    <Container maxWidth="xs" sx={{ paddingY: 4 }}>
+      
+      {/* Cabecera: Logo y nombre de mi App */}
+      <Box textAlign="center" mb={3}>
+        <Avatar sx={{ bgcolor: NAVY, margin: '0 auto', mb: 1 }}>V</Avatar>
+        <Typography variant="h5" color={NAVY} fontWeight="700">
+          Vitalix
+        </Typography>
+        <Typography variant="body2" color={TEAL}>
+          Phronesis
+        </Typography>
+      </Box>
+
+      {/* Banner informativo */}
+      <Card sx={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        p: 2, 
+        mb: 2, 
+        borderRadius: 4, 
+        bgcolor: TEAL, 
+        color: 'white' 
+      }}>
+        <Avatar sx={{ bgcolor: 'white', color: TEAL, mr: 2 }}>DR</Avatar>
+        <Box>
+          <Typography variant="subtitle2" fontWeight="bold">Acceso Seguro</Typography>
+          <Typography variant="caption" sx={{ color: SKY_BLUE }}>
+            Identifícate para continuar
+          </Typography>
+        </Box>
+      </Card>
+
+      {/* Formulario de entrada */}
+      <Paper variant="outlined" sx={{ borderRadius: 4, overflow: 'hidden', borderColor: SKY_BLUE }}>
+        
+        <Tabs 
+          value={tabActual} 
+          onChange={cambiarTab} 
+          variant="fullWidth" 
+          sx={{ bgcolor: SKY_BLUE }}
+        >
+          <Tab label="Paciente" sx={{ textTransform: 'none', fontWeight: 'bold', color: NAVY }} />
+          <Tab label="Personal" sx={{ textTransform: 'none', fontWeight: 'bold', color: NAVY }} />
+        </Tabs>
+
+        <Box p={4} bgcolor={BEIGE}>
+          {/* Inputs de usuario */}
+          <Typography variant="caption" fontWeight="bold" color={NAVY}>IDENTIFICACIÓN</Typography>
+          <TextField 
+            fullWidth 
+            size="small" 
+            placeholder="Número de ID" 
+            sx={{ bgcolor: 'white', mt: 0.5, mb: 2 }} 
+          />
+          
+          <Typography variant="caption" fontWeight="bold" color={NAVY}>CONTRASEÑA</Typography>
+          <TextField 
+            fullWidth 
+            size="small" 
+            type="password" 
+            placeholder="••••••••" 
+            sx={{ bgcolor: 'white', mt: 0.5, mb: 3 }} 
+          />
+
+          <Button 
+            fullWidth 
+            variant="contained" 
+            sx={{ 
+              bgcolor: NAVY, 
+              py: 1.5, 
+              borderRadius: 2, 
+              textTransform: 'none', 
+              fontWeight: 'bold',
+              '&:hover': { bgcolor: '#1a2e3f' } 
+            }}
+          >
+            Acceder al Portal
+          </Button>
+
+          <Link 
+            href="#" 
+            sx={{ 
+              display: 'block', 
+              textAlign: 'center', 
+              mt: 2, 
+              fontSize: '0.8rem', 
+              color: TEAL, 
+              textDecoration: 'none' 
+            }}
+          >
+            ¿Olvidaste tu contraseña?
+          </Link>
         </Box>
       </Paper>
+      
     </Container>
   );
 }
