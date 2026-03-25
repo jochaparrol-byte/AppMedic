@@ -15,7 +15,7 @@ def probar_sistema():
 
     # 2. Datos de prueba
     email_test = "sofia@email.com"
-    pass_test = "sofia12"
+    pass_test = "sofia12ss"
     datos_perfil = {
         'tarjeta_profesional': 'MS-98765',
         'nombre_completo': 'sofia contreras',
@@ -39,11 +39,12 @@ def probar_sistema():
     print(f"Resultado: {mensaje}")
     if user:
         print(f"✅ Bienvenida confirmada para: {user.email} (Rol: {user.rol})")
-
+    else:
+        print("\n--- ❌ Probando Login INCORRECTO ---")
+        user_fail, mensaje_fail = auth.iniciar_sesion(email_test, "password_incorrecta")
+        print(f"Resultado esperado: {mensaje_fail}")
     # 5. Prueba de Login Fallido
-    """print("\n--- ❌ Probando Login INCORRECTO ---")
-    user_fail, mensaje_fail = auth.iniciar_sesion(email_test, "password_incorrecta")
-    print(f"Resultado esperado: {mensaje_fail}")"""
+    
 
     # 6. Limpieza
     db.cerrar_sesion()

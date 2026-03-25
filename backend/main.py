@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+
 app = FastAPI()
 
 # Permiso para que React se conecte sin bloqueos de seguridad
@@ -14,18 +15,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 1. El Molde: Define qué tipo de dato esperamos recibir
-class DatosPaciente(BaseModel):
-    nombre: str
 
-# 2. El Endpoint: La ruta que recibe el dato
-@app.post("/api/pacientes")
-def registrar_paciente(datos: DatosPaciente):
-    # Imprime en la consola de Python para que tú lo veas
-    print(f"📡 [SEÑAL RECIBIDA] Dato ingresado: {datos.nombre}")
-    
-    # Devuelve la confirmación a React
-    return {
-        "status": "ok", 
-        "mensaje": f"El paciente {datos.nombre} fue recibido correctamente por Python."
+class DatosAcceso(BaseModel):
+    usuario: str
+    password: str
+
+
+@app.post("/api/logeo")
+def validar_identidad(datos: DatosAcceso):
+    print(f"El usuario que se ingreso fue: {datos.usuario}")
+    print(f"La contraseña que se ingreso fue: {datos.password}")
+
+    return{
+        "estado":"exito",
+        "mensaje":"credenciales recibidas con exito"
     }

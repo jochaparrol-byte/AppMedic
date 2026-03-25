@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Container, Box, Typography, TextField, 
-  Button, Paper, Avatar, Card, Tabs, Tab, Link 
+  Button, Paper, Avatar, Card, Tabs, Tab, Link
 } from '@mui/material';
 
 // colores para el proyecto
@@ -14,9 +14,37 @@ function App() {
   // Estado para controlar si entra un paciente o personal
   const [tabActual, setTabActual] = useState(0);
 
+  const [usuarioActual, setUsuarioActual] = useState("");
+  const [passActual, setpassActual] = useState("");
+
   const cambiarTab = (event, nuevoValor) => {
     setTabActual(nuevoValor);
   };
+
+//cargue de datos
+  const logearClick = () => {
+    console.log("valor enviado: ", usuarioActual, passActual);
+    
+    const datosLogeo = {
+      usuario: usuarioActual,
+      password: passActual
+    };
+
+
+    fetch('http://localhost:8000/api/logeo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(datosLogeo)
+    })
+    .then(respuesta => respuesta.json())
+    .then(datos => console.log("La respuesta del servidor es: ", datos))
+    .catch(error => console.error("Error de conexión:", error)); 
+  };
+  
+
+  
 
   return (
     <Container maxWidth="xs" sx={{ paddingY: 4 }}>
@@ -72,6 +100,7 @@ function App() {
             size="small" 
             placeholder="Número de ID" 
             sx={{ bgcolor: 'white', mt: 0.5, mb: 2 }} 
+            onChange={(e)=>setUsuarioActual(e.target.value)}
           />
           
           <Typography variant="caption" fontWeight="bold" color={NAVY}>CONTRASEÑA</Typography>
@@ -81,11 +110,13 @@ function App() {
             type="password" 
             placeholder="••••••••" 
             sx={{ bgcolor: 'white', mt: 0.5, mb: 3 }} 
+            onChange={(e)=> setpassActual(e.target.value)}
           />
 
           <Button 
             fullWidth 
             variant="contained" 
+            onClick={logearClick}
             sx={{ 
               bgcolor: NAVY, 
               py: 1.5, 
