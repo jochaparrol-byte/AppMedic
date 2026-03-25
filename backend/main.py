@@ -2,8 +2,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
-
+import models
+from GestorAuth import GestorAuth
+from GestorBaseDatos import GestorBaseDatos 
 app = FastAPI()
 
 # Permiso para que React se conecte sin bloqueos de seguridad
@@ -23,10 +24,20 @@ class DatosAcceso(BaseModel):
 
 @app.post("/api/logeo")
 def validar_identidad(datos: DatosAcceso):
-    print(f"El usuario que se ingreso fue: {datos.usuario}")
-    print(f"La contraseña que se ingreso fue: {datos.password}")
+    db=GestorBaseDatos()
+    auth=GestorAuth(db)
 
+    usuario, mensaje= auth.iniciar_sesion(datos.usuario, datos.password)
+    print("Resultado")
+    
+    if usuario:
+        print(f"Bienbenido, {datos.usuario}")
+        
+    else:
+        print("Contrasena incorrecta")
+        
     return{
-        "estado":"exito",
-        "mensaje":"credenciales recibidas con exito"
+        "logeo": usuario,
+        "mensaje": mensaje
     }
+    

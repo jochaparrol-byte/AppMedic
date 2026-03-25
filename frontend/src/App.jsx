@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Container, Box, Typography, TextField, 
-  Button, Paper, Avatar, Card, Tabs, Tab, Link
+  Button, Paper, Avatar, Card, Tabs, Tab, Link, Alert, Snackbar
 } from '@mui/material';
 
 // colores para el proyecto
@@ -13,6 +13,11 @@ const BEIGE = '#f1edea';
 function App() {
   // Estado para controlar si entra un paciente o personal
   const [tabActual, setTabActual] = useState(0);
+  const [alerta, setAlerta]=useState({
+    apertura: false,
+    mensaje: "",
+    severidad:"succes"
+  });
 
   const [usuarioActual, setUsuarioActual] = useState("");
   const [passActual, setpassActual] = useState("");
@@ -20,7 +25,10 @@ function App() {
   const cambiarTab = (event, nuevoValor) => {
     setTabActual(nuevoValor);
   };
-
+  const cierreAlerta=(event, reason)=>{
+    if(reason==='clickaway')return;
+    setAlerta({...alerta, apertura:false})
+  }
 //cargue de datos
   const logearClick = () => {
     console.log("valor enviado: ", usuarioActual, passActual);
@@ -31,6 +39,7 @@ function App() {
     };
 
 
+
     fetch('http://localhost:8000/api/logeo', {
       method: 'POST',
       headers: {
@@ -39,9 +48,18 @@ function App() {
       body: JSON.stringify(datosLogeo)
     })
     .then(respuesta => respuesta.json())
-    .then(datos => console.log("La respuesta del servidor es: ", datos))
-    .catch(error => console.error("Error de conexión:", error)); 
-  };
+    .then(datos => setAlerta({
+      apertura: true,
+      mensaje: datos.mensaje,
+      severidad: "success"
+    }))
+    .catch(error => setAlerta({
+      apertura:true,
+      mensaje: "Error de conexion",
+      severidad: "error"
+    }));
+
+};
   
 
   
@@ -144,6 +162,20 @@ function App() {
           </Link>
         </Box>
       </Paper>
+      <div style={{ padding: '50px' }}>
+        {/* ... tus TextField y Botones ... */}
+
+        {/* El componente visual de la alerta */}
+        <Snackbar 
+          open={alerta.apertura} 
+          autoHideDuration={6000} // Se cierra sola a los 6 segundos
+          onClose={cierreAlerta}
+        >
+          <Alert onClose={cierreAlerta} severity={alerta.severidad} sx={{ width: '100%' }}>
+            {alerta.mensaje}
+          </Alert>
+        </Snackbar>
+      </div>
       
     </Container>
   );
