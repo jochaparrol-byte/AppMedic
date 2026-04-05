@@ -33,7 +33,7 @@ class Medico(Base): # <--- (Base) Agregado
 # ==========================================
 # 2. CLASE PACIENTE
 # ==========================================
-class Paciente(Base): # <--- (Base) Agregado (AQUÍ ESTABA EL ERROR)
+class Paciente(Base):
     __tablename__ = "pacientes"
     
     id = Column(Integer, primary_key=True)

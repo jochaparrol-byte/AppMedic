@@ -16,6 +16,7 @@ class GestorBaseDatos:
 
         entorno=os.getenv("ENTORNO", "local")
         if(entorno=="produccion"): #produccion para que la conexion con la base de datos sea con la base de datos en AWS
+            print("🏠 Iniciando en modo PRODUCCION...")
             self.usuario=os.getenv("DB_USUARIO")
             self.password=os.getenv("DB_PASSWORD")
             self.host=os.getenv("DB_HOST")
