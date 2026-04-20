@@ -15,7 +15,7 @@ function Login() {
   // Estado para controlar si entra un paciente o personal
   const navegar= useNavigate();
 
-  const [tabActual, setTabActual] = useState(0);
+  const [tabActual, setTabActual] = useState("Paciente");
   const [alerta, setAlerta]=useState({
     apertura: false,
     mensaje: "",
@@ -62,12 +62,19 @@ function Login() {
       mensaje: "Error de conexion",
       severidad: "error"
     }));
-
-   
-
 };
+
+
  const registrarClick=()=> {
-      navegar("/registro");
+      console.log("El valor de tabActual es:", tabActual);
+      if (tabActual==="Paciente"){
+        navegar("RegistroUsuario");
+        
+      }
+      if(tabActual==="Personal"){
+        navegar("/RegistroMedico");
+      }
+      
     }
 
   
@@ -114,8 +121,8 @@ function Login() {
           variant="fullWidth" 
           sx={{ bgcolor: SKY_BLUE }}
         >
-          <Tab label="Paciente" sx={{ textTransform: 'none', fontWeight: 'bold', color: NAVY }} />
-          <Tab label="Personal" sx={{ textTransform: 'none', fontWeight: 'bold', color: NAVY }} />
+          <Tab label="Paciente" value="Paciente" sx={{ textTransform: 'none', fontWeight: 'bold', color: NAVY }} />
+          <Tab label="Personal" value="Personal" sx={{ textTransform: 'none', fontWeight: 'bold', color: NAVY }} />
         </Tabs>
 
         <Box p={4} bgcolor={BEIGE}>

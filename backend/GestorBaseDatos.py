@@ -36,7 +36,7 @@ class GestorBaseDatos:
         ClaseSesion=sessionmaker(bind=self.engine)
         self.sesion=ClaseSesion() #sesion somos nosotros, le estamos diciendo al mayordomo: "oye, necesito que hagas algo por mi"
 
-        print("✅ Conexión a AWS exitosa.")
+        print("Conexión a AWS exitosa.")
 
 
     def insertar(self, objeto):

@@ -20,7 +20,23 @@ app.add_middleware(
 class DatosAcceso(BaseModel):
     usuario: str
     password: str
-
+class DatosRegistro(BaseModel):
+    nombres: str
+    apellidos: str
+    tipodocumento: str
+    numerodocumento: int
+    fechadenacimiento: str
+    sexo: str
+    tipodesangre: str
+    celular: int
+    correo: str
+    direccion: str
+    ocupacion: str
+    parentcontacto: str
+    contactoemergencia: str
+    numerocontacto: int
+    alergia: str
+    password: str
 
 @app.post("/api/logeo")
 def validar_identidad(datos: DatosAcceso):
@@ -40,4 +56,13 @@ def validar_identidad(datos: DatosAcceso):
         "logeo": usuario,
         "mensaje": mensaje
     }
-    
+
+@app.post("/api/registro")
+def regustrar_datos(datos:DatosRegistro):#corregir escritura
+    db=GestorBaseDatos()
+    auth=GestorAuth(db)
+    usuariollegada=datos.nombres
+    print(usuariollegada)
+    return{
+        "nombrescompletos":usuariollegada
+    }

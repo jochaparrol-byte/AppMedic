@@ -11,7 +11,7 @@ from sqlalchemy.orm import relationship, declarative_base
 class Medico(Base): # <--- (Base) Agregado
     __tablename__ = "medicos"
     id = Column(Integer, primary_key=True)
-    documento_identidad = Column(Integer, unique=True)
+    documento_identidad = Column(Integer, unique=True)#revisar
     tarjeta_profesional = Column(String, unique=True)
     nombre_completo = Column(String)
     especialidad = Column(String)

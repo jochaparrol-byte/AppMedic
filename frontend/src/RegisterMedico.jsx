@@ -16,7 +16,7 @@ const NAVY = '#2F4156';
 const TEAL = '#567C8D';
 const SKY_BLUE = '#C8D9E6';
 const BEIGE = '#f1edea';
-function Register() {
+function RegisterMedico() {
   const [tipoSangre, setTipoSangre]=useState("")
   const [tipoDoucmento, setTipoDocumento]=useState("")
   const [tipoSexo, setTipoSexo]=useState("")
@@ -83,7 +83,9 @@ function Register() {
             
           </Box>
 
-          {/*// ! SEGUNDO BLOQUE DE INFORMACION */}
+          {/*// ! SEGUNDO BLOQUE DE INFORMACION. */}
+          {/*// *MODIFICAR LOS SELECT PARA QUE SEAN RESPONSIVE */} 
+          
           <Box display={"flex"} px={4} pb={0} gap={2} bgcolor={BEIGE}>
             <Box flex={6/10}>
               <Typography variant="caption"  fontWeight={"bold"} color={NAVY}>TIPO DE DOCUMENTO</Typography>
@@ -118,7 +120,7 @@ function Register() {
             </Box>
             </LocalizationProvider>
             <Box flex={1}>
-              
+
               <Typography variant="caption" fontWeight="bold" color={NAVY} >SEXO BIOLOGICO</Typography>
               <FormControl fullWidth size="small">
                 <Select value={tipoSexo} onChange={(e)=>setTipoSexo(e.target.value)} displayEmpty sx={{bgcolor:'white', mt:0.5, mb:2}}>
@@ -234,4 +236,4 @@ function Register() {
     );
 }
 
-export default Register;
+export default RegisterMedico;
