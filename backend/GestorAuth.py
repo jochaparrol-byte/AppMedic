@@ -30,11 +30,25 @@ class GestorAuth:
             )
             elif rol == 'paciente':
                 perfil = Paciente(
-                nombre_recibido=datos_perfil['nombre'],
-                tipo_sangre_recibido=datos_perfil['tipo_sangre'],
-                usuario_id_recibido=usuario_nuevo.id
+                nombres=datos_perfil.nombres ,
+                apellidos=datos_perfil.apellidos,
+                tipo_de_documento=datos_perfil.tipodocumento,
+                documento_identidad=datos_perfil.numerodocumento,
+                fecha_nacimiento=None, #datos_perfil.fechadenacimiento
+                genero=datos_perfil.sexo,
+                tipo_de_sangre=datos_perfil.tipodesangre,
+                celular=datos_perfil.celular,
+                correo=datos_perfil.correo,
+                direccion_residencia=datos_perfil.direccion,
+                ocupacion=datos_perfil.ocupacion,
+                parentesco=datos_perfil.parentcontacto,
+                contacto_emergencia=datos_perfil.contactoemergencia,
+                numero_contacto=datos_perfil.numerocontacto,
+                alergias=datos_perfil.alergia,
+                usuario=usuario_nuevo
             )
             perfil.usuario_id = usuario_nuevo.id
+            self.db.sesion.add(perfil)
             self.db.sesion.commit()
             return "registro exitoso"
 

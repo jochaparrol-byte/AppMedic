@@ -5,9 +5,6 @@ from sqlalchemy.orm import relationship, declarative_base
 
 
 
-# ==========================================
-# 1. CLASE MEDICO
-# ==========================================
 class Medico(Base): # <--- (Base) Agregado
     __tablename__ = "medicos"
     id = Column(Integer, primary_key=True)
@@ -37,19 +34,45 @@ class Paciente(Base):
     __tablename__ = "pacientes"
     
     id = Column(Integer, primary_key=True)
-    documento_identidad = Column(Integer, unique=True)
     nombres = Column(String)
     apellidos = Column(String)
+    tipo_de_documento= Column(String)
+    documento_identidad = Column(Integer, unique=True)
     fecha_nacimiento = Column(DateTime)
     genero = Column(String)
+    tipo_de_sangre= Column(String)
     celular = Column(String)
     correo = Column(String)
-    rh = Column(String)
-    
+    direccion_residencia= Column(String)
+    ocupacion= Column(String)
+    parentesco= Column(String)
+    contacto_emergencia= Column(String)
+    numero_contacto= Column(Integer)
+    alergias=Column(String)
     usuario_id = Column(Integer, ForeignKey('usuarios.id'))
     # back_populates debe coincidir con el nombre en Usuario
     usuario = relationship("Usuario", back_populates="perfil_paciente")
 
+    def __init__(self, nombres, apellidos, tipo_de_documento, 
+                 documento_identidad, fecha_nacimiento, genero, 
+                 tipo_de_sangre, celular, correo, direccion_residencia, 
+                 ocupacion, parentesco, contacto_emergencia, numero_contacto, alergias, usuario):
+        self.nombres=nombres
+        self.apellidos=apellidos
+        self.tipo_de_documento=tipo_de_documento
+        self.documento_identidad=documento_identidad
+        self.fecha_nacimiento=fecha_nacimiento
+        self.genero=genero
+        self.tipo_de_sangre=tipo_de_sangre
+        self.celular=celular
+        self.correo=correo
+        self.direccion_residencia=direccion_residencia
+        self.ocupacion=ocupacion
+        self.parentesco=parentesco
+        self.contacto_emergencia=contacto_emergencia
+        self.numero_contacto=numero_contacto
+        self.alergias=alergias
+        self.usuario=usuario
 # ==========================================
 # 3. CLASE CITAS
 # ==========================================

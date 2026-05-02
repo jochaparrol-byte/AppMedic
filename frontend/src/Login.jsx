@@ -68,7 +68,7 @@ function Login() {
  const registrarClick=()=> {
       console.log("El valor de tabActual es:", tabActual);
       if (tabActual==="Paciente"){
-        navegar("RegistroUsuario");
+        navegar("/RegistroUsuario");
         
       }
       if(tabActual==="Personal"){
@@ -76,6 +76,10 @@ function Login() {
       }
       
     }
+  const menuClick=()=>{
+    console.log("Cambiando de menu")
+    navegar("/Menu")
+  }
 
   
 

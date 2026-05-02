@@ -58,9 +58,11 @@ def validar_identidad(datos: DatosAcceso):
     }
 
 @app.post("/api/registro")
-def regustrar_datos(datos:DatosRegistro):#corregir escritura
+def registrar_datos(datos:DatosRegistro):#corregir escritura
     db=GestorBaseDatos()
     auth=GestorAuth(db)
+    mensaje=auth.registrar_usuario(datos.correo, datos.password, "paciente", datos)
+    print(mensaje)
     usuariollegada=datos.nombres
     print(usuariollegada)
     return{

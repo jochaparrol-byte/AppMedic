@@ -234,7 +234,7 @@ function RegisterUsuario() {
                  size="small" 
                  placeholder="Ingresar" 
                  sx={{bgcolor:"white", mt:0.5, mb:2}}
-                 onClick={(e)=>setTelefonoCelular(e.target.value)}
+                 onChange={(e)=>setTelefonoCelular(e.target.value)}
                  ></TextField>
               </Box>
 
@@ -244,7 +244,7 @@ function RegisterUsuario() {
                  size="small" 
                  placeholder="Ingresar valor" 
                  sx={{bgcolor:"white", mt:0.5, mb:2}}
-                 onClick={(e)=>setCorreoElectronico(e.target.value)}
+                 onChange={(e)=>setCorreoElectronico(e.target.value)}
                  ></TextField>
               </Box>
 
@@ -254,7 +254,7 @@ function RegisterUsuario() {
                 size="small" 
                 placeholder="Ingresar valor" 
                 sx={{bgcolor:"white", mt:0.5, mb:2}}
-                onClick={(e)=>setDireccionResidencia(e.target.value)}
+                onChange={(e)=>setDireccionResidencia(e.target.value)}
                 ></TextField>
               </Box>
 
@@ -264,7 +264,7 @@ function RegisterUsuario() {
                  size="small" 
                  placeholder="Ocupacion"
                  sx={{bgcolor:"white", mt:0.5, mb:2}}
-                 onClick={(e)=>setOcupacion(e.target.value)} 
+                 onChange={(e)=>setOcupacion(e.target.value)} 
                   ></TextField>
               </Box>
           </Box>
@@ -277,7 +277,7 @@ function RegisterUsuario() {
                  size="small" 
                  placeholder="Parentesco CE" 
                  sx={{bgcolor:"white", mt:0.5, mb:2}}
-                 onClick={(e)=>setParentescoCE(e.target.value)}
+                 onChange={(e)=>setParentescoCE(e.target.value)}
                  ></TextField>
               </Box>
               <Box flex={1}>
@@ -286,7 +286,7 @@ function RegisterUsuario() {
                   size="small" 
                   placeholder="Nombre del contacto" 
                   sx={{bgcolor:"white", mt:0.5, mb:2}}
-                  onClick={(e)=>setNombreCE(e.target.value)}
+                  onChange={(e)=>setNombreCE(e.target.value)}
                   ></TextField>
               </Box>
               <Box flex={1}>
@@ -295,7 +295,7 @@ function RegisterUsuario() {
                 size="small" 
                 placeholder="Numero del contacto" 
                 sx={{bgcolor:"white", mt:0.5, mb:2}}
-                onClick={(e)=>setNumeroContacto(e.target.value)}
+                onChange={(e)=>setNumeroContacto(e.target.value)}
                 ></TextField>
               </Box>
           </Box>
@@ -306,7 +306,7 @@ function RegisterUsuario() {
                 <TextField fullWidth 
                 multiline rows={3} 
                 placeholder="Penicilina, Latex, Nueces...(Si no tiene, escriba ninguna)" sx={{bgcolor:"white", mt:0.5, mb:2}}
-                onClick={(e)=>setAlergias(e.target.value)}
+                onChange={(e)=>setAlergias(e.target.value)}
                 ></TextField>
               </Box>
           </Box>
@@ -321,7 +321,7 @@ function RegisterUsuario() {
                 type="password" 
                 placeholder="••••••••" 
                 sx={{bgcolor:"white", mt:0.5, mb:2}}
-                onClick={(e)=>setPass(e.target.value)}
+                onChange={(e)=>setPass(e.target.value)}
                 ></TextField>
               </Box>
               <Box flex={1}>

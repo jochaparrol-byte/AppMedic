@@ -16,7 +16,7 @@ class GestorBaseDatos:
 
         entorno=os.getenv("ENTORNO", "local")
         if(entorno=="produccion"): #produccion para que la conexion con la base de datos sea con la base de datos en AWS
-            print("🏠 Iniciando en modo PRODUCCION...")
+            print(" Iniciando en modo PRODUCCION...")
             self.usuario=os.getenv("DB_USUARIO")
             self.password=os.getenv("DB_PASSWORD")
             self.host=os.getenv("DB_HOST")
@@ -25,7 +25,7 @@ class GestorBaseDatos:
             self.database_name=os.getenv("DB_NAME")
             self.url = f"postgresql+psycopg2://{self.usuario}:{self.password}@{self.host}:{self.port}/{self.database_name}?sslmode=require"
         else: #cuando diga local la conexion se realizara con la bd de prueba, la local
-            print("🏠 Iniciando en modo LOCAL (SQLite)...")
+            print("Iniciando en modo LOCAL (SQLite)...")
             
             self.url = "sqlite:///base_datos_pruebas.db"
         
