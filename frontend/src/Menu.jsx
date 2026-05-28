@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Avatar, Button, Paper, Chip,
   Divider, List, ListItem, ListItemIcon, ListItemText,
-  Card, CardContent, Grid
+  Card, CardContent, Grid, TextField, MenuItem // Se añadieron TextField y MenuItem para el formulario
 } from '@mui/material';
 
 // ── Colores del proyecto ──────────────────────────────────────────
@@ -104,6 +104,61 @@ const appointments = [
 // ════════════════════════════════════════════════════════════════
 export default function Dashboard() {
   const [activeItem, setActiveItem] = useState('Inicio');
+
+  // ── NUEVOS ESTADOS AGREGADOS PARA CAPTURAR EL FORMULARIO ──────────
+  const [especialidad, setEspecialidad] = useState('');
+  const [medicoId, setMedicoId] = useState('');
+  const [fecha, setFecha] = useState('');
+  const [hora, setHora] = useState('');
+  const [motivoConsulta, setMotivoConsulta] = useState('');
+
+  // ── FUNCIÓN CONECTADA AL BACKEND EN PYTHON ────────────────────────
+  const handleAgendarCita = async () => {
+    // Validación básica de campos vacíos
+    if (!medicoId || !fecha || !hora || !motivoConsulta) {
+      alert("⚠️ Por favor completa todos los campos requeridos.");
+      return;
+    }
+
+    const datosCita = {
+      id_paciente: 1, // Reemplazar temporalmente con el ID del paciente logueado
+      id_medico: parseInt(medicoId),
+      fecha: fecha,
+      hora: hora,
+      motivo_consulta: motivoConsulta
+    };
+
+    try {
+      const respuesta = await fetch("http://localhost:8000/api/citas/agendar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datosCita),
+      });
+
+      const data = await respuesta.json();
+
+      if (respuesta.ok && data.estado === "ok") {
+        alert("✅ ¡Cita guardada en la base de datos con éxito!");
+        
+        // Limpiamos los campos del formulario
+        setEspecialidad('');
+        setMedicoId('');
+        setFecha('');
+        setHora('');
+        setMotivoConsulta('');
+        
+        // Redireccionamos a la pantalla de Inicio
+        setActiveItem('Inicio');
+      } else {
+        alert("❌ Error del servidor: " + (data.detail || "No se pudo agendar la cita."));
+      }
+    } catch (error) {
+      console.error("Error de conexión:", error);
+      alert("❌ No se pudo establecer conexión con el servidor de Python.");
+    }
+  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: '#f5f5f3' }}>
@@ -210,93 +265,213 @@ export default function Dashboard() {
 
         {/* MAIN */}
         <Box component="main" sx={{ flex: 1, overflowY: 'auto', p: '20px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+          
+          {activeItem === 'Inicio' ? (
+            <>
+              {/* Hero */}
+              <Box sx={{
+                background: 'linear-gradient(135deg, #066c83 0%, #6b8ae8 60%, #47469a 100%)',
+                borderRadius: 3, p: '28px 24px', color: 'white', position: 'relative', overflow: 'hidden',
+                '&::after':  { content: '""', position: 'absolute', right: -20, top: -20,  width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' },
+                '&::before': { content: '""', position: 'absolute', right: 40,  bottom: -30, width: 90,  height: 90,  borderRadius: '50%', background: 'rgba(255,255,255,0.05)' },
+              }}>
+                <Typography sx={{ fontSize: 11, letterSpacing: '1.2px', textTransform: 'uppercase', opacity: 0.8, mb: 1, fontWeight: 500 }}>
+                  Bienvenido
+                </Typography>
+                <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 600, mb: 1, lineHeight: 1.3 }}>
+                  Tu salud en<br />manos expertas
+                </Typography>
+                <Typography sx={{ fontSize: 13, opacity: 0.85, lineHeight: 1.5, mb: 2, maxWidth: 280 }}>
+                  Atención médica integral, tecnología de vanguardia y un equipo comprometido con tu bienestar.
+                </Typography>
+                <Button
+                  startIcon={<IcoCal />}
+                  onClick={() => setActiveItem('Agendar cita')}
+                  sx={{
+                    bgcolor: 'white', color: '#3d5b8d', borderRadius: 2,
+                    px: 2.25, py: 1.125, fontSize: 13, fontWeight: 500,
+                    textTransform: 'none',
+                    '&:hover': { bgcolor: '#f0f0f0' },
+                  }}
+                >
+                  Agendar cita médica
+                </Button>
+              </Box>
 
-          {/* Hero */}
-          <Box sx={{
-            background: 'linear-gradient(135deg, #066c83 0%, #6b8ae8 60%, #47469a 100%)',
-            borderRadius: 3, p: '28px 24px', color: 'white', position: 'relative', overflow: 'hidden',
-            '&::after':  { content: '""', position: 'absolute', right: -20, top: -20,  width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' },
-            '&::before': { content: '""', position: 'absolute', right: 40,  bottom: -30, width: 90,  height: 90,  borderRadius: '50%', background: 'rgba(255,255,255,0.05)' },
-          }}>
-            <Typography sx={{ fontSize: 11, letterSpacing: '1.2px', textTransform: 'uppercase', opacity: 0.8, mb: 1, fontWeight: 500 }}>
-              Bienvenido
-            </Typography>
-            <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 600, mb: 1, lineHeight: 1.3 }}>
-              Tu salud en<br />manos expertas
-            </Typography>
-            <Typography sx={{ fontSize: 13, opacity: 0.85, lineHeight: 1.5, mb: 2, maxWidth: 280 }}>
-              Atención médica integral, tecnología de vanguardia y un equipo comprometido con tu bienestar.
-            </Typography>
-            <Button
-              startIcon={<IcoCal />}
-              sx={{
-                bgcolor: 'white', color: '#3d5b8d', borderRadius: 2,
-                px: 2.25, py: 1.125, fontSize: 13, fontWeight: 500,
-                textTransform: 'none',
-                '&:hover': { bgcolor: '#f0f0f0' },
-              }}
-            >
-              Agendar cita médica
-            </Button>
-          </Box>
-
-          {/* Tarjetas de servicios */}
-          <Grid container spacing={1.5}>
-            {serviceCards.map(card => (
-              <Grid item xs={4} key={card.label}>
-                <Paper variant="outlined" sx={{ borderRadius: 3, p: 2, borderColor: 'rgba(0,0,0,0.1)' }}>
-                  <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1.25 }}>
-                    {card.icon}
-                  </Box>
-                  <Typography sx={{ fontSize: 12, fontWeight: 500, color: '#111', mb: 0.5 }}>{card.label}</Typography>
-                  <Typography sx={{ fontSize: 11, color: '#666', lineHeight: 1.4 }}>{card.sub}</Typography>
-                </Paper>
+              {/* Tarjetas de servicios */}
+              <Grid container spacing={1.5}>
+                {serviceCards.map(card => (
+                  <Grid item xs={4} key={card.label}>
+                    <Paper variant="outlined" sx={{ borderRadius: 3, p: 2, borderColor: 'rgba(0,0,0,0.1)' }}>
+                      <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1.25 }}>
+                        {card.icon}
+                      </Box>
+                      <Typography sx={{ fontSize: 12, fontWeight: 500, color: '#111', mb: 0.5 }}>{card.label}</Typography>
+                      <Typography sx={{ fontSize: 11, color: '#666', lineHeight: 1.4 }}>{card.sub}</Typography>
+                    </Paper>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
 
-          {/* Próximas citas */}
-          <Paper variant="outlined" sx={{ borderRadius: 3, p: 2, borderColor: 'rgba(0,0,0,0.1)' }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#111', mb: 1.5 }}>Próximas citas</Typography>
-            {appointments.map((appt, idx) => (
-              <React.Fragment key={appt.name}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 1.25 }}>
-                  <Box sx={{
-                    width: 36, height: 36, borderRadius: 2,
-                    bgcolor: appt.dotBg, color: appt.dotColor,
-                    display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', justifyContent: 'center',
-                    flexShrink: 0,
-                  }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, lineHeight: 1 }}>{appt.day}</span>
-                    <span style={{ fontSize: 9 }}>{appt.month}</span>
-                  </Box>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#111' }}>{appt.name}</Typography>
-                    <Typography sx={{ fontSize: 11, color: '#666' }}>{appt.spec}</Typography>
-                  </Box>
-                  <Box sx={{ textAlign: 'right' }}>
-                    <Typography sx={{ fontSize: 12, color: '#999' }}>{appt.time}</Typography>
-                    <Chip
-                      label={appt.status}
-                      size="small"
-                      sx={{
-                        fontSize: 10, height: 20, mt: 0.25,
-                        bgcolor: appt.badgeBg, color: appt.badgeColor,
-                        fontWeight: 500, borderRadius: '20px',
-                      }}
-                    />
-                  </Box>
+              {/* Próximas citas */}
+              <Paper variant="outlined" sx={{ borderRadius: 3, p: 2, borderColor: 'rgba(0,0,0,0.1)' }}>
+                <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#111', mb: 1.5 }}>Próximas citas</Typography>
+                {appointments.map((appt, idx) => (
+                  <React.Fragment key={appt.name}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 1.25 }}>
+                      <Box sx={{
+                        width: 36, height: 36, borderRadius: 2,
+                        bgcolor: appt.dotBg, color: appt.dotColor,
+                        display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', justifyContent: 'center',
+                        flexShrink: 0,
+                      }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, lineHeight: 1 }}>{appt.day}</span>
+                        <span style={{ fontSize: 9 }}>{appt.month}</span>
+                      </Box>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#111' }}>{appt.name}</Typography>
+                        <Typography sx={{ fontSize: 11, color: '#666' }}>{appt.spec}</Typography>
+                      </Box>
+                      <Box sx={{ textAlign: 'right' }}>
+                        <Typography sx={{ fontSize: 12, color: '#999' }}>{appt.time}</Typography>
+                        <Chip
+                          label={appt.status}
+                          size="small"
+                          sx={{
+                            fontSize: 10, height: 20, mt: 0.25,
+                            bgcolor: appt.badgeBg, color: appt.badgeColor,
+                            fontWeight: 500, borderRadius: '20px',
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                    {idx < appointments.length - 1 && (
+                      <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
+                    )}
+                  </React.Fragment>
+                ))}
+              </Paper>
+            </>
+          ) : activeItem === 'Agendar cita' ? (
+            /* Vista de "Agendar cita" totalmente integrada y estilizada */
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+              
+              {/* Banner superior de sección */}
+              <Paper 
+                elevation={0} 
+                sx={{ 
+                  p: 3, 
+                  borderRadius: 3, 
+                  background: `linear-gradient(135deg, ${TEAL} 0%, ${NAVY} 100%)`, 
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2
+                }}
+              >
+                <Box sx={{ bgcolor: 'rgba(255,255,255,0.15)', p: 1.25, borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <IcoCalPlus />
                 </Box>
-                {idx < appointments.length - 1 && (
-                  <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
-                )}
-              </React.Fragment>
-            ))}
-          </Paper>
+                <Box>
+                  <Typography sx={{ fontSize: 16, fontWeight: 600 }}>Agendar Nueva Cita</Typography>
+                  <Typography sx={{ fontSize: 12, opacity: 0.85 }}>Completa los datos solicitados para reservar tu espacio médico de atención.</Typography>
+                </Box>
+              </Paper>
+
+              <Grid container spacing={2}>
+                {/* Bloque Izquierdo: Formulario */}
+                <Grid item xs={12} md={8}>
+                  <Paper variant="outlined" sx={{ borderRadius: 3, p: 3, borderColor: 'rgba(0,0,0,0.1)', bgcolor: 'white' }}>
+                    <Typography sx={{ fontSize: 14, fontWeight: 600, color: '#111', mb: 2.5 }}>Detalles de la Consulta</Typography>
+                    
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>ESPECIALIDAD MÉDICA</Typography>
+                        <TextField select fullWidth value={especialidad} onChange={(e) => setEspecialidad(e.target.value)} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }}>
+                          <MenuItem value="general">Medicina General</MenuItem>
+                          <MenuItem value="cardio">Cardiología</MenuItem>
+                          <MenuItem value="pediatria">Pediatría</MenuItem>
+                        </TextField>
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>MÉDICO ASIGNADO</Typography>
+                        <TextField select fullWidth value={medicoId} onChange={(e) => setMedicoId(e.target.value)} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }}>
+                          {/* Cambié los string 'lucia' y 'andres' por los IDs numéricos 1 y 2 que espera tu base de datos */}
+                          <MenuItem value={1}>Dra. Lucía Herrera</MenuItem>
+                          <MenuItem value={2}>Dr. Andrés Mora</MenuItem>
+                        </TextField>
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>FECHA REQUERIDA</Typography>
+                        <TextField fullWidth type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} InputLabelProps={{ shrink: true }} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }} />
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>HORA DISPONIBLE</Typography>
+                        <TextField fullWidth type="time" value={hora} onChange={(e) => setHora(e.target.value)} InputLabelProps={{ shrink: true }} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }} />
+                      </Grid>
+
+                      {/* NUEVO CAMPO: Motivo de consulta (obligatorio para la petición a Python) */}
+                      <Grid item xs={12}>
+                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>MOTIVO DE LA CONSULTA</Typography>
+                        <TextField fullWidth multiline rows={2} placeholder="Escribe brevemente la razón de tu cita médica..." value={motivoConsulta} onChange={(e) => setMotivoConsulta(e.target.value)} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }} />
+                      </Grid>
+                    </Grid>
+
+                    <Divider sx={{ my: 3, borderColor: 'rgba(0,0,0,0.08)' }} />
+
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1.5 }}>
+                      <Button variant="text" sx={{ textTransform: 'none', color: '#666', fontSize: 13 }} onClick={() => setActiveItem('Inicio')}>
+                        Cancelar
+                      </Button>
+                      <Button variant="contained" onClick={handleAgendarCita} sx={{ bgcolor: ACCENT, textTransform: 'none', borderRadius: 2, fontSize: 13, px: 3, '&:hover': { bgcolor: '#055466' } }}>
+                        Confirmar Turno
+                      </Button>
+                    </Box>
+                  </Paper>
+                </Grid>
+
+                {/* Bloque Derecho: Paneles informativos con la misma paleta */}
+                <Grid item xs={12} md={4}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                    <Paper variant="outlined" sx={{ borderRadius: 3, p: 2.5, bgcolor: '#E1F5EE', borderColor: 'transparent' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <Box sx={{ color: '#0e5e8a', display: 'flex' }}><IcoClock /></Box>
+                        <Typography sx={{ fontSize: 13, fontWeight: 600, color: '#0e5e8a' }}>Información Clave</Typography>
+                      </Box>
+                      <Typography sx={{ fontSize: 11.5, color: '#445ba0', lineHeight: 1.5 }}>
+                        Las citas agendadas pueden gestionarse, cancelarse o modificarse desde el apartado de "Mis citas" con al menos 24 horas de antelación.
+                      </Typography>
+                    </Paper>
+
+                    <Paper variant="outlined" sx={{ borderRadius: 3, p: 2.5, bgcolor: BEIGE, borderColor: 'transparent' }}>
+                      <Typography sx={{ fontSize: 13, fontWeight: 600, color: NAVY, mb: 0.5 }}>¿Soporte Directo?</Typography>
+                      <Typography sx={{ fontSize: 11.5, color: '#555', lineHeight: 1.4, mb: 1 }}>Si presentas inconvenientes en la asignación de turnos web, contacta directamente a nuestra central de atención.</Typography>
+                      <Typography component="a" href="#" sx={{ fontSize: 11.5, fontWeight: 600, color: ACCENT, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
+                        Línea de atención médica →
+                      </Typography>
+                    </Paper>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+          ) : (
+            /* Fallback limpio para el resto de pestañas */
+            <Paper variant="outlined" sx={{ borderRadius: 3, p: 4, borderColor: 'rgba(0,0,0,0.1)', bgcolor: 'white', textAlign: 'center' }}>
+              <Typography sx={{ fontSize: 14, color: '#666' }}>
+                Sección en desarrollo: <strong>{activeItem}</strong>
+              </Typography>
+              <Button size="small" sx={{ mt: 2, textTransform: 'none', bgcolor: TEAL, color: 'white', '&:hover': { bgcolor: NAVY } }} onClick={() => setActiveItem('Inicio')}>
+                Regresar al Inicio
+              </Button>
+            </Paper>
+          )}
 
         </Box>
       </Box>
     </Box>
   );
-}
+} 

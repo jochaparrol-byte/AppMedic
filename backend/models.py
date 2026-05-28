@@ -3,8 +3,6 @@ import bcrypt
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship, declarative_base
 
-
-
 class Medico(Base): # <--- (Base) Agregado
     __tablename__ = "medicos"
     id = Column(Integer, primary_key=True)
@@ -52,6 +50,9 @@ class Paciente(Base):
     usuario_id = Column(Integer, ForeignKey('usuarios.id'))
     # back_populates debe coincidir con el nombre en Usuario
     usuario = relationship("Usuario", back_populates="perfil_paciente")
+    
+    # NUEVO: Relación con citas agregada
+    citas = relationship("Citas", back_populates="paciente")
 
     def __init__(self, nombres, apellidos, tipo_de_documento, 
                  documento_identidad, fecha_nacimiento, genero, 
@@ -73,6 +74,7 @@ class Paciente(Base):
         self.numero_contacto=numero_contacto
         self.alergias=alergias
         self.usuario=usuario
+
 # ==========================================
 # 3. CLASE CITAS
 # ==========================================
@@ -88,6 +90,9 @@ class Citas(Base): # <--- (Base) Agregado
     preescripcion = Column(Text)
     
     medico = relationship("Medico", back_populates="citas")
+    
+    # NUEVO: Relación con paciente agregada
+    paciente = relationship("Paciente", back_populates="citas")
 
     def __init__(self, id_paciente, id_medico, fecha_hora, motivo_consulta, diagnostico=None, preescripcion=None):
         self.id_paciente = id_paciente
@@ -121,4 +126,4 @@ class Usuario(Base):
         return bcrypt.checkpw(
             password_plana_intento.encode('utf-8'), 
             self.password.encode('utf-8')
-        )
+        ) 
