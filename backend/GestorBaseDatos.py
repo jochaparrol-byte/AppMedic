@@ -42,7 +42,9 @@ class GestorBaseDatos:
     def insertar(self, objeto):
         self.sesion.add(objeto)
         self.sesion.commit()
-        print(f"Registro insertado: {objeto}")
+        print(f"Registro insertado: {objeto}")  
+
+
     
     def obtener_por_columna(self, modelo, nombre_columna, valor_a_buscar):
         columna_exacta=getattr(modelo, nombre_columna)

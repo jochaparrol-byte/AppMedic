@@ -2,302 +2,206 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Avatar, Button, Paper, Chip,
   Divider, List, ListItem, ListItemIcon, ListItemText,
-  Grid
+  Grid, TextField, MenuItem 
 } from '@mui/material';
 
-
+// ── Colores 
 const NAVY   = '#2F4156';
 const TEAL   = '#567C8D';
+const SKY    = '#C8D9E6';
+const BEIGE  = '#f1edea';
+const ACCENT = '#066c83';
 
+// ── Íconos SVG 
+const IcoGrid    = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>;
+const IcoCalPlus = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1" y="2" width="13" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.2"/><path d="M5 1v2M10 1v2M1 6h13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/><path d="M4 9h2M4 11h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoClock   = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" strokeWidth="1.2"/><path d="M7.5 4.5v3l2 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoList    = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M2 2h11v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2z" stroke="currentColor" strokeWidth="1.2"/><path d="M5 5h5M5 8h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoUser    = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.2"/><path d="M2.5 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoDoc     = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M4 2h7l2 2v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" stroke="currentColor" strokeWidth="1.2"/><path d="M5 7h5M5 9.5h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoLogout  = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M7.5 1A6.5 6.5 0 0 0 1 7.5h2a4.5 4.5 0 1 1 4.5 4.5V14A6.5 6.5 0 0 0 7.5 1z" fill="currentColor" opacity="0.4"/><path d="M9.5 7.5L6 5v5l3.5-2.5z" fill="currentColor"/></svg>;
+const IcoCal     = () => <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="#0F6E56" strokeWidth="1.2"/><path d="M4.5 1v2M9.5 1v2M1 6h12" stroke="#0F6E56" strokeWidth="1.2" strokeLinecap="round"/></svg>;
 
-const IcoGrid    = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>;
-const IcoList    = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 2h11v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2z" stroke="currentColor" strokeWidth="1.2"/><path d="M5 5h5M5 8h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
-const IcoUser    = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.2"/><path d="M2.5 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
-const IcoDoc     = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M4 2h7l2 2v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" stroke="currentColor" strokeWidth="1.2"/><path d="M5 7h5M5 9.5h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
-const IcoLogout  = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1A6.5 6.5 0 0 0 1 7.5h2a4.5 4.5 0 1 1 4.5 4.5V14A6.5 6.5 0 0 0 7.5 1z" fill="currentColor" opacity="0.4"/><path d="M9.5 7.5L6 5v5l3.5-2.5z" fill="currentColor"/></svg>;
-const IcoPill    = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="3" y="3" width="9" height="9" rx="2" stroke="currentColor" strokeWidth="1.2"/><path d="M7.5 3v9" stroke="currentColor" strokeWidth="1.2"/></svg>;
-const IcoChart   = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M1 13V1h3v12H1zM6 13V5h3v8H6zM11 13V9h3v4h-3z" stroke="currentColor" strokeWidth="1.2"/></svg>;
-const IcoStethoscope = () => <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M4 10v4h8v-4H4z" stroke="#1D9E75" strokeWidth="1.3"/><circle cx="8" cy="6" r="3" stroke="#1D9E75" strokeWidth="1.3"/></svg>;
-
-// menú lateral 
+// ── SECCIONES DE NAVEGACIÓN MÉDICA ──────────────────────────────────────
 const navSections = [
-  {
-    label: 'PRINCIPAL',
-    items: [{ text: 'Dashboard', icon: <IcoGrid /> }],
+  { label: 'Principal', items: [{ text: 'Ir a inicio', icon: <IcoGrid /> }] },
+  { label: 'Gestión', items: [
+      { text: 'Mi agenda', icon: <IcoCalPlus /> },
+      { text: 'Mis pacientes', icon: <IcoUser /> },
+    ]
   },
-  {
-    label: 'GESTIÓN',
-    items: [
-      { text: 'Mi Agenda',        icon: <IcoList /> },
-      { text: 'Mis Pacientes',    icon: <IcoUser /> },
-      { text: 'Historiales',      icon: <IcoDoc /> },
-    ],
-  },
-  {
-    label: 'CLÍNICO',
-    items: [
-      { text: 'Recetas',          icon: <IcoPill /> },
-      { text: 'Reportes',         icon: <IcoChart /> },
-    ],
+  { label: 'Clínico', items: [
+      { text: 'Historias clínicas', icon: <IcoDoc /> },
+      { text: 'Recetas', icon: <IcoList /> },
+    ]
   },
 ];
 
-// ── Cards de Resumen Médico
-const serviceCards = [
-  {
-    label: 'Pacientes Hoy',
-    sub: '12 pacientes programados.',
-    bg: '#E1F5EE', 
-    icon: (
-      <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-        <path d="M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2z" stroke="#1D9E75" strokeWidth="1.3"/>
-        <path d="M8 5v3l2 1" stroke="#1D9E75" strokeWidth="1.3" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: 'Consultas Activas',
-    sub: '3 consultas en curso.',
-    bg: '#E6F1FB', 
-    icon: <IcoStethoscope />,
-  },
-  {
-    label: 'Resultados Pendientes',
-    sub: '5 exámenes de laboratorio.',
-    bg: '#FAEEDA', 
-    icon: (
-      <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-        <path d="M4 8h8M8 4v8" stroke="#BA7517" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
+const actionCards = [
+  { label: 'Ver Agenda', sub: 'Revisar turnos de hoy.', bg: '#E1F5EE', icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2z" stroke="#1D9E75" strokeWidth="1.3"/><path d="M8 5v3l2 1" stroke="#1D9E75" strokeWidth="1.3" strokeLinecap="round"/></svg> },
+  { label: 'Pacientes', sub: 'Directorio clínico.', bg: '#E6F1FB', icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><circle cx="8" cy="5" r="2.5" stroke="#378ADD" strokeWidth="1.5"/><path d="M3 13c0-2.5 2.5-4.5 5-4.5s5 2 5 4.5" stroke="#378ADD" strokeWidth="1.5" strokeLinecap="round"/></svg> },
+  { label: 'Emitir Receta', sub: 'Crear nueva receta médica.', bg: '#FAEEDA', icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M4 2h8v12H4z" stroke="#BA7517" strokeWidth="1.3"/><path d="M6 6h4M6 9h3" stroke="#BA7517" strokeWidth="1.3" strokeLinecap="round"/></svg> },
 ];
 
-// Lista de Próximos Pacientes 
-const patientAppointments = [
-  {
-    day: 'Hoy', month: '10:00', name: 'Carlos Mendoza',
-    spec: 'Motivo: Chequeo general', time: '10:00 am',
-    dotBg: '#E1F5EE', dotColor: '#0e5e8a',
-    badgeBg: '#E1F5EE', badgeColor: '#1e65b0', status: 'En espera',
-  },
-  {
-    day: 'Hoy', month: '11:30', name: 'María Fernanda Ruiz',
-    spec: 'Motivo: Revisión de exámenes', time: '11:30 am',
-    dotBg: '#E6F1FB', dotColor: '#185FA5',
-    badgeBg: '#FAEEDA', badgeColor: '#566c8b', status: 'Confirmado',
-  },
-];
-
-export default function MenuMedico() {
-  const [activeItem, setActiveItem] = useState('Dashboard');
+export default function DashboardMedico() {
+  const [activeItem, setActiveItem] = useState('Ir a inicio');
+  
+  const [misCitasLista] = useState([
+    {
+      id: 1, paciente: 'Roberto Gómez', tipo: 'Consulta General',
+      fecha: '2026-06-15', hora: '10:30 AM',
+      motivo: 'Revisión resultados de laboratorio', estado: 'Confirmada'
+    },
+    {
+      id: 2, paciente: 'Ana Laura Mendieta', tipo: 'Seguimiento',
+      fecha: '2026-06-15', hora: '11:30 AM',
+      motivo: 'Control de presión arterial', estado: 'En sala de espera'
+    }
+  ]);
 
   return (
-    
-    <Box sx={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      height: '100vh', 
-      bgcolor: '#f5f5f3',
-      boxSizing: 'border-box'
-    }}>
-
-      {/* TOP BAR */}
-      <Box sx={{
-        height: 56, bgcolor: 'white', flexShrink: 0,
-        borderBottom: '0.5px solid rgba(0,0,0,0.1)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        position: 'relative',
-      }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', maxWidth: '80%', bgcolor: '#f5f5f3', overflow: 'hidden' }}>
+      
+      {/* HEADER */}
+      <Box sx={{ height: 56, width: '100%', bgcolor: 'white', flexShrink: 0, borderBottom: '1px solid rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Avatar sx={{ width: 28, height: 28, bgcolor: TEAL, borderRadius: '18px' }}>
+          <Avatar sx={{ width: 28, height: 28, bgcolor: TEAL, borderRadius: '6px' }}>
             <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
               <path d="M8 2C8 2 4 5 4 9a4 4 0 0 0 8 0c0-4-4-7-4-7z" fill="white" opacity="0.9"/>
               <path d="M6 8h4M8 6v4" stroke="#1D9E75" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </Avatar>
-          <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600, color: '#111', letterSpacing: '-0.3px' }}>
-            Vitalix 
+          <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: NAVY, letterSpacing: '-0.3px' }}>
+            Vitalix <small style={{fontSize: '12px', fontWeight: 400}}>Portal Médico</small>
           </Typography>
         </Box>
-        <Typography sx={{
-          position: 'absolute', bottom: 7, left: '50%', transform: 'translateX(-50%)',
-          fontSize: 10, color: '#445ba0', letterSpacing: '1px',
-          textTransform: 'uppercase', fontWeight: 500, whiteSpace: 'nowrap',
-        }}>
-          PORTAL MEDICO
-        </Typography>
       </Box>
 
-      {/* BODY */}
-      <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-
-        {/* SIDEBAR */}
-        <Box component="nav" sx={{
-          width: 200, flexShrink: 0, bgcolor: 'white',
-          borderRight: '0.5px solid rgba(0,0,0,0.1)',
-          display: 'flex', flexDirection: 'column',
-          py: 2, overflowY: 'auto',
-        }}>
+      <Box sx={{ display: 'flex', flexGrow: 1, width: '100%', overflow: 'hidden' }}>
+        
+        {/* MENÚ LATERAL */}
+        <Box component="nav" sx={{ width: 220, flexShrink: 0, bgcolor: 'white', borderRight: '1px solid rgba(0,0,0,0.08)', display: 'flex', flexDirection: 'column', py: 1.5, overflowY: 'auto' }}>
           {navSections.map((section, si) => (
             <React.Fragment key={section.label}>
-              {si > 0 && <Divider sx={{ mx: '12px', my: 1, borderColor: 'rgba(0,0,0,0.08)' }} />}
-              <Typography sx={{ px: '12px', pb: 1, pt: si === 0 ? 0 : 1, fontSize: 10, fontWeight: 500, letterSpacing: '0.8px', textTransform: 'uppercase', color: '#999' }}>
-                {section.label}
-              </Typography>
+              {si > 0 && <Divider sx={{ mx: 2, my: 1, borderColor: 'rgba(0,0,0,0.06)' }} />}
+              <Typography sx={{ px: 2.5, pb: 0.5, pt: si === 0 ? 0 : 1, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase', color: '#999' }}>{section.label}</Typography>
               <List disablePadding>
                 {section.items.map(item => {
                   const isActive = activeItem === item.text;
                   return (
-                    <ListItem
-                      key={item.text}
-                      onClick={() => setActiveItem(item.text)}
-                      sx={{
-                        px: 2, py: '9px', gap: '10px', cursor: 'pointer',
-                        borderLeft: isActive ? '2px solid #4f46c5' : '2px solid transparent',
-                        bgcolor: isActive ? '#E1F5EE' : 'transparent',
-                        color: isActive ? '#3d4c80' : '#555',
-                        fontWeight: isActive ? 500 : 400,
-                        '&:hover': { bgcolor: '#f5f5f3', color: '#111' },
-                        transition: 'all 0.15s',
-                      }}
-                    >
-                      <ListItemIcon sx={{ minWidth: 0, color: 'inherit', opacity: isActive ? 1 : 0.7 }}>
-                        {item.icon}
-                      </ListItemIcon>
-                      <ListItemText primary={item.text} primaryTypographyProps={{ fontSize: 13.5 }} />
+                    <ListItem key={item.text} onClick={() => setActiveItem(item.text)} sx={{ px: 2.5, py: 1, gap: 1, cursor: 'pointer', borderLeft: isActive ? `3px solid ${ACCENT}` : '3px solid transparent', bgcolor: isActive ? '#E1F5EE' : 'transparent', color: isActive ? NAVY : '#666', fontWeight: isActive ? 600 : 500, '&:hover': { bgcolor: '#f9f9f9', color: NAVY }, transition: 'all 0.2s' }}>
+                      <ListItemIcon sx={{ minWidth: 0, color: 'inherit', opacity: isActive ? 1 : 0.8 }}>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.text} primaryTypographyProps={{ fontSize: 13 }} />
                     </ListItem>
                   );
                 })}
               </List>
             </React.Fragment>
           ))}
-
-          <Divider sx={{ mx: '12px', my: 1, borderColor: 'rgba(0,0,0,0.08)' }} />
-
-          {/* Opciones de Perfil y Cerrar Sesión */}
-          <List disablePadding>
-             {[
-               { text: 'Mi perfil', icon: <IcoUser /> },
-               { text: 'Cerrar sesión', icon: <IcoLogout /> },
-             ].map(item => (
-                <ListItem key={item.text} sx={{
-                    px: 2, py: '9px', gap: '10px', cursor: 'pointer',
-                    color: '#555',
-                    '&:hover': { bgcolor: '#f5f5f3', color: '#111' },
-                }}>
-                    <ListItemIcon sx={{ minWidth: 0, color: 'inherit', opacity: 0.7 }}>
-                      {item.icon}
-                    </ListItemIcon>
-                    <ListItemText primary={item.text} primaryTypographyProps={{ fontSize: 13.5 }} />
-                </ListItem>
-             ))}
-          </List>
+          <Box sx={{ flexGrow: 1 }} />
+          <Divider sx={{ mx: 2, my: 1.5, borderColor: 'rgba(0,0,0,0.06)' }} />
+          {[ { text: 'Mi perfil', icon: <IcoUser /> }, { text: 'Cerrar sesión', icon: <IcoLogout /> } ].map(item => (
+            <ListItem key={item.text} onClick={() => setActiveItem(item.text)} sx={{ px: 2.5, py: 1, gap: 1, cursor: 'pointer', color: '#666', '&:hover': { bgcolor: '#f9f9f9', color: NAVY } }}>
+              <ListItemIcon sx={{ minWidth: 0, color: 'inherit', opacity: 0.8 }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} primaryTypographyProps={{ fontSize: 13 }} />
+            </ListItem>
+          ))}
         </Box>
 
-        {/* MAIN CONTENT */}
-        <Box component="main" sx={{ flex: 1, overflowY: 'auto', p: '20px', display: 'flex', flexDirection: 'column', gap: 2 }}>
-
-          {/* Hero Médico (ahora ocupa el 100% del contenedor) */}
-          <Box sx={{
-            background: 'linear-gradient(135deg, #066c83 0%, #6b8ae8 60%, #47469a 100%)',
-            borderRadius: 3, p: '28px 24px', color: 'white', position: 'relative', overflow: 'hidden',
-            width: '100%', // Asegura que ocupe el ancho completo disponible
-            boxSizing: 'border-box',
-            '&::after':  { content: '""', position: 'absolute', right: -20, top: -20,  width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' },
-            '&::before': { content: '""', position: 'absolute', right: 40,  bottom: -30, width: 90,  height: 90,  borderRadius: '50%', background: 'rgba(255,255,255,0.05)' },
-          }}>
-            <Typography sx={{ fontSize: 11, letterSpacing: '1.2px', textTransform: 'uppercase', opacity: 0.8, mb: 1, fontWeight: 500 }}>
-              PANEL DE CONTROL
-            </Typography>
-            <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 600, mb: 1, lineHeight: 1.3 }}>
-              Dr. Nombre Apellido<br />(Especialidad)
-            </Typography>
-            <Typography sx={{ fontSize: 13, opacity: 0.85, lineHeight: 1.5, mb: 2, maxWidth: 300 }}>
-              Gestiona tus consultas del día, revisa historiales clínicos y administra tus pacientes de forma eficiente.
-            </Typography>
-            <Button
-              startIcon={<IcoGrid />}
-              sx={{
-                bgcolor: 'white', color: '#3d5b8d', borderRadius: 2,
-                px: 2.25, py: 1.125, fontSize: 13, fontWeight: 500,
-                textTransform: 'none',
-                '&:hover': { bgcolor: '#f0f0f0' },
-              }}
-            >
-              Ver agenda completa
-            </Button>
-          </Box>
-
-          {/* Tarjetas de servicios Médico (GRID CORREGIDO: ahora se estira) */}
-          <Grid container spacing={1.5}>
-            {serviceCards.map(card => (
-              <Grid item xs={4} key={card.label}>
-                <Paper variant="outlined" sx={{ 
-                  borderRadius: 3, 
-                  p: 2, 
-                  borderColor: 'rgba(0,0,0,0.1)',
-                  height: '100%', 
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flexGrow: 1 
-                }}>
-                  <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1.25 }}>
-                    {card.icon}
-                  </Box>
-                  <Typography sx={{ fontSize: 12, fontWeight: 500, color: '#111', mb: 0.5 }}>{card.label}</Typography>
-                  <Typography sx={{ fontSize: 11, color: '#666', lineHeight: 1.4 }}>{card.sub}</Typography>
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
-
-          {/* Próximos pacientes Médico (PAPER CORREGIDO: ahora se estira) */}
-          <Paper variant="outlined" sx={{ 
-            borderRadius: 3, 
-            p: 2, 
-            borderColor: 'rgba(0,0,0,0.1)',
-            width: '100%', 
-            boxSizing: 'border-box'
-          }}>
-            <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#111', mb: 1.5 }}>Próximos pacientes en sala</Typography>
-            {patientAppointments.map((appt, idx) => (
-              <React.Fragment key={appt.name}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 1.25 }}>
-                  <Box sx={{
-                    width: 36, height: 36, borderRadius: 2,
-                    bgcolor: appt.dotBg, color: appt.dotColor,
-                    display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', justifyContent: 'center',
-                    flexShrink: 0,
-                  }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, lineHeight: 1 }}>{appt.day}</span>
-                    <span style={{ fontSize: 9 }}>{appt.month}</span>
-                  </Box>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#111' }}>{appt.name}</Typography>
-                    <Typography sx={{ fontSize: 11, color: '#666' }}>{appt.spec}</Typography>
-                  </Box>
-                  <Box sx={{ textAlign: 'right' }}>
-                    <Typography sx={{ fontSize: 12, color: '#999' }}>{appt.time}</Typography>
-                    <Chip
-                      label={appt.status}
-                      size="small"
-                      sx={{
-                        fontSize: 10, height: 20, mt: 0.25,
-                        bgcolor: appt.badgeBg, color: appt.badgeColor,
-                        fontWeight: 500, borderRadius: '20px',
-                      }}
-                    />
-                  </Box>
+        {/* AREA PRINCIPAL */}
+        <Box component="main" sx={{ flexGrow: 1, width: 'calc(100% - 220px)', overflowY: 'auto' }}>
+          
+          <Box sx={{ width: '90%', maxWidth: '1100px', minWidth: '700px', margin: '0 auto', py: 4, display: 'flex', flexDirection: 'column' }}>
+            
+            {activeItem === 'Ir a inicio' ? (
+              <Box sx={{ width: '100%' }}>
+                {/* HERO BANNER */}
+                <Box sx={{ background: 'linear-gradient(135deg, #066c83 0%, #6b8ae8 60%, #47469a 100%)', borderRadius: 3, p: 3, color: 'white', mb: 2.5 }}>
+                  <Typography sx={{ fontSize: 12, letterSpacing: '1.2px', textTransform: 'uppercase', opacity: 0.9, mb: 1, fontWeight: 600 }}>Panel de Control</Typography>
+                  <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, mb: 1, lineHeight: 1.2 }}>Dr. Martínez <small style={{fontSize: '16px'}}>(Especialidad)</small></Typography>
+                  <Typography sx={{ fontSize: 14, opacity: 0.9, mb: 2.5, maxWidth: 450 }}>Gestiona tus consultas del día, revisa historias clínicas y administra tus pacientes de forma eficiente.</Typography>
+                  <Button startIcon={<IcoCal />} onClick={() => setActiveItem('Mi agenda')} sx={{ bgcolor: 'white', color: '#3d5b8d', borderRadius: 2, px: 2.5, py: 1, fontSize: 13, fontWeight: 600, textTransform: 'none', '&:hover': { bgcolor: '#f0f0f0' } }}>
+                    Ver agenda completa
+                  </Button>
                 </Box>
-                {idx < patientAppointments.length - 1 && (
-                  <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
-                )}
-              </React.Fragment>
-            ))}
-          </Paper>
 
+                {/* TARJETAS DE ACCIÓN: AHORA OCUPAN TODO EL ANCHO */}
+                <Box sx={{ display: 'flex', gap: 2, width: '100%', flexDirection: { xs: 'column', sm: 'row' } }}>
+                  {actionCards.map(card => (
+                    <Paper 
+                      key={card.label}
+                      elevation={0} 
+                      onClick={() => card.label === 'Ver Agenda' && setActiveItem('Mi agenda')}
+                      sx={{ 
+                        flex: 1, 
+                        borderRadius: 2.5, 
+                        p: 2.5, 
+                        border: '1px solid rgba(0,0,0,0.08)', 
+                        cursor: 'pointer', 
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        '&:hover': { bgcolor: '#fafafa', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' } 
+                      }} 
+                    >
+                      <Box sx={{ width: 36, height: 36, borderRadius: 1.5, bgcolor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1.5 }}>
+                        {card.icon}
+                      </Box>
+                      <Typography sx={{ fontSize: 14, fontWeight: 600, color: NAVY, mb: 0.5 }}>{card.label}</Typography>
+                      <Typography sx={{ fontSize: 12, color: '#666' }}>{card.sub}</Typography>
+                    </Paper>
+                  ))}
+                </Box>
+              </Box>
+
+            ) : activeItem === 'Mi agenda' ? (
+              <Box sx={{ width: '100%' }}>
+                <Paper elevation={0} sx={{ p: 2, mb: 2.5, borderRadius: 2.5, background: `linear-gradient(135deg, ${TEAL} 0%, ${NAVY} 100%)`, color: 'white', display: 'flex', alignItems: 'center', gap: 1.5, width: '100%', boxSizing: 'border-box' }}>
+                  <Box sx={{ bgcolor: 'rgba(255,255,255,0.15)', p: 1, borderRadius: 1.5, display: 'flex' }}><IcoList /></Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 16, fontWeight: 600 }}>Mi Agenda de Hoy</Typography>
+                    <Typography sx={{ fontSize: 12, opacity: 0.85 }}>Listado de pacientes programados para consulta hoy.</Typography>
+                  </Box>
+                </Paper>
+                
+                <Paper variant="outlined" sx={{ borderRadius: 2.5, p: 3, borderColor: 'rgba(0,0,0,0.08)', bgcolor: 'white', width: '100%', boxSizing: 'border-box' }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, width: '100%' }}>
+                    {misCitasLista.map((cita) => (
+                      <Paper key={cita.id} variant="outlined" sx={{ 
+                        width: '100%', boxSizing: 'border-box', borderRadius: 2.5, p: 2.5, borderColor: 'rgba(0,0,0,0.1)', bgcolor: '#fcfcfc', borderLeft: `5px solid ${ACCENT}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: '0.2s', '&:hover': { bgcolor: 'white', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }
+                      }}>
+                        <Box sx={{ display: 'flex', gap: 2.5, alignItems: 'center', flexGrow: 1 }}>
+                          <Box sx={{ bgcolor: BEIGE, px: 2, py: 1.5, borderRadius: 2, textAlign: 'center', minWidth: 80 }}>
+                            <Typography sx={{ color: NAVY, fontWeight: 800, fontSize: 18, lineHeight: 1 }}>{cita.hora.split(' ')[0]}</Typography>
+                            <Typography sx={{ color: '#888', fontSize: 11, fontWeight: 700, mt: 0.5 }}>{cita.hora.split(' ')[1]}</Typography>
+                          </Box>
+                          <Box>
+                            <Typography sx={{ fontSize: 18, fontWeight: 800, color: NAVY, mb: 0.5 }}>{cita.paciente}</Typography>
+                            <Typography sx={{ fontSize: 13, color: '#666', mb: 1 }}>Motivo: <i>{cita.motivo}</i></Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Avatar sx={{ width: 24, height: 24, bgcolor: TEAL }}><IcoDoc/></Avatar>
+                              <Typography sx={{ fontSize: 13, fontWeight: 700, color: NAVY }}>{cita.tipo}</Typography>
+                            </Box>
+                          </Box>
+                        </Box>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1, minWidth: 120 }}>
+                          <Chip label={cita.estado} size="small" sx={{ bgcolor: cita.estado === 'En sala de espera' ? '#FAEEDA' : '#E1F5EE', color: cita.estado === 'En sala de espera' ? '#BA7517' : '#0e5e8a', fontSize: 11, fontWeight: 700, borderRadius: 1 }} />
+                        </Box>
+                      </Paper>
+                    ))}
+                  </Box>
+                </Paper>
+              </Box>
+
+            ) : (
+              <Paper variant="outlined" sx={{ borderRadius: 2.5, p: 3, borderColor: 'rgba(0,0,0,0.1)', bgcolor: 'white', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}>
+                <Typography sx={{ fontSize: 14, color: '#666' }}>Sección en desarrollo: <strong>{activeItem}</strong></Typography>
+                <Button size="medium" sx={{ mt: 1.5, textTransform: 'none', bgcolor: TEAL, color: 'white', '&:hover': { bgcolor: NAVY } }} onClick={() => setActiveItem('Ir a inicio')}>Regresar al Inicio</Button>
+              </Paper>
+            )}
+
+          </Box>
         </Box>
       </Box>
     </Box>

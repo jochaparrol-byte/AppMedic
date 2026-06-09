@@ -2,476 +2,369 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Avatar, Button, Paper, Chip,
   Divider, List, ListItem, ListItemIcon, ListItemText,
-  Card, CardContent, Grid, TextField, MenuItem // Se añadieron TextField y MenuItem para el formulario
+  Grid, TextField, MenuItem 
 } from '@mui/material';
 
-// ── Colores del proyecto ──────────────────────────────────────────
+// ── Colores del proyecto 
 const NAVY   = '#2F4156';
 const TEAL   = '#567C8D';
 const SKY    = '#C8D9E6';
 const BEIGE  = '#f1edea';
 const ACCENT = '#066c83';
 
-// ── Íconos SVG inline ────────────────────────────────────────────
-const IcoGrid    = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>;
-const IcoCalPlus = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="2" width="13" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.2"/><path d="M5 1v2M10 1v2M1 6h13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/><path d="M4 9h2M4 11h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
-const IcoClock   = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" strokeWidth="1.2"/><path d="M7.5 4.5v3l2 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
-const IcoList    = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 2h11v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2z" stroke="currentColor" strokeWidth="1.2"/><path d="M5 5h5M5 8h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
-const IcoUser    = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.2"/><path d="M2.5 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
-const IcoStar    = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5l1.9 3.8 4.2.6-3 2.95.7 4.15L7.5 11l-3.8 2L4.4 8.85 1.4 5.9l4.2-.6L7.5 1.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/></svg>;
-const IcoFlask   = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 2a5.5 5.5 0 1 0 0 11A5.5 5.5 0 0 0 7.5 2z" stroke="currentColor" strokeWidth="1.2"/><path d="M7.5 5v2.5l1.5 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
-const IcoDoc     = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M4 2h7l2 2v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" stroke="currentColor" strokeWidth="1.2"/><path d="M5 7h5M5 9.5h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
-const IcoLogout  = () => <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1A6.5 6.5 0 0 0 1 7.5h2a4.5 4.5 0 1 1 4.5 4.5V14A6.5 6.5 0 0 0 7.5 1z" fill="currentColor" opacity="0.4"/><path d="M9.5 7.5L6 5v5l3.5-2.5z" fill="currentColor"/></svg>;
-const IcoCal     = () => <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="#0F6E56" strokeWidth="1.2"/><path d="M4.5 1v2M9.5 1v2M1 6h12" stroke="#0F6E56" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+// ── Íconos SVG 
+const IcoGrid   = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>;
+const IcoCalPlus = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1" y="2" width="13" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.2"/><path d="M5 1v2M10 1v2M1 6h13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/><path d="M4 9h2M4 11h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoClock   = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" strokeWidth="1.2"/><path d="M7.5 4.5v3l2 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoList    = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M2 2h11v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2z" stroke="currentColor" strokeWidth="1.2"/><path d="M5 5h5M5 8h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoUser    = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.2"/><path d="M2.5 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoStar    = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5l1.9 3.8 4.2.6-3 2.95.7 4.15L7.5 11l-3.8 2L4.4 8.85 1.4 5.9l4.2-.6L7.5 1.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/></svg>;
+const IcoFlask   = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M7.5 2a5.5 5.5 0 1 0 0 11A5.5 5.5 0 0 0 7.5 2z" stroke="currentColor" strokeWidth="1.2"/><path d="M7.5 5v2.5l1.5 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoDoc     = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M4 2h7l2 2v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" stroke="currentColor" strokeWidth="1.2"/><path d="M5 7h5M5 9.5h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>;
+const IcoLogout  = () => <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M7.5 1A6.5 6.5 0 0 0 1 7.5h2a4.5 4.5 0 1 1 4.5 4.5V14A6.5 6.5 0 0 0 7.5 1z" fill="currentColor" opacity="0.4"/><path d="M9.5 7.5L6 5v5l3.5-2.5z" fill="currentColor"/></svg>;
+const IcoCal     = () => <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="#0F6E56" strokeWidth="1.2"/><path d="M4.5 1v2M9.5 1v2M1 6h12" stroke="#0F6E56" strokeWidth="1.2" strokeLinecap="round"/></svg>;
 
-// ── Secciones del sidebar ────────────────────────────────────────
+// ── Secciones de Navegación 
 const navSections = [
-  {
-    label: 'Principal',
-    items: [{ text: 'Inicio', icon: <IcoGrid /> }],
+  { label: 'Principal', items: [{ text: 'Inicio', icon: <IcoGrid /> }] },
+  { label: 'Citas', items: [
+      { text: 'Agendar cita', icon: <IcoCalPlus /> },
+      { text: 'Mis citas', icon: <IcoList /> },
+    ]
   },
-  {
-    label: 'Citas',
-    items: [
-      { text: 'Agendar cita',     icon: <IcoCalPlus /> },
-      { text: 'Reprogramar cita', icon: <IcoClock />   },
-      { text: 'Mis citas',        icon: <IcoList />    },
-      { text: 'Médicos',          icon: <IcoUser />    },
-    ],
-  },
-  {
-    label: 'Servicios',
-    items: [
-      { text: 'Urgencias 24/7',   icon: <IcoStar />  },
-      { text: 'Laboratorio',      icon: <IcoFlask /> },
-      { text: 'Historial médico', icon: <IcoDoc />   },
-    ],
+  { label: 'Servicios', items: [
+      { text: 'Urgencias 24/7', icon: <IcoStar /> },
+      { text: 'Laboratorio', icon: <IcoFlask /> },
+      { text: 'Historial médico', icon: <IcoDoc /> },
+    ]
   },
 ];
 
-// ── Cards de servicios ───────────────────────────────────────────
 const serviceCards = [
-  {
-    label: 'Urgencias 24/7',
-    sub: 'Atención inmediata todos los días del año.',
-    bg: '#E1F5EE',
-    icon: (
-      <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-        <path d="M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2z" stroke="#1D9E75" strokeWidth="1.3"/>
-        <path d="M8 5v3l2 1" stroke="#1D9E75" strokeWidth="1.3" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: 'Cardiología',
-    sub: 'Centro avanzado en diagnóstico cardíaco.',
-    bg: '#E6F1FB',
-    icon: (
-      <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-        <path d="M4 8h8M8 4v8" stroke="#378ADD" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: 'Maternidad',
-    sub: 'Cuidado integral para mamá y bebé.',
-    bg: '#FAEEDA',
-    icon: (
-      <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-        <circle cx="8" cy="6" r="3" stroke="#BA7517" strokeWidth="1.3"/>
-        <path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#BA7517" strokeWidth="1.3" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
+  { label: 'Urgencias 24/7', sub: 'Atención inmediata todos los días.', bg: '#E1F5EE', icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2z" stroke="#1D9E75" strokeWidth="1.3"/><path d="M8 5v3l2 1" stroke="#1D9E75" strokeWidth="1.3" strokeLinecap="round"/></svg> },
+  { label: 'Cardiología', sub: 'Diagnóstico cardíaco avanzado.', bg: '#E6F1FB', icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M4 8h8M8 4v8" stroke="#378ADD" strokeWidth="1.5" strokeLinecap="round"/></svg> },
+  { label: 'Maternidad', sub: 'Cuidado integral para mamá y bebé.', bg: '#FAEEDA', icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><circle cx="8" cy="6" r="3" stroke="#BA7517" strokeWidth="1.3"/><path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#BA7517" strokeWidth="1.3" strokeLinecap="round"/></svg> },
 ];
 
-// ── Próximas citas ───────────────────────────────────────────────
-const appointments = [
-  {
-    day: '14', month: 'ABR', name: 'Dra. Lucía Herrera',
-    spec: 'Medicina general', time: '10:30 am',
-    dotBg: '#E1F5EE', dotColor: '#0e5e8a',
-    badgeBg: '#E1F5EE', badgeColor: '#1e65b0', status: 'Confirmada',
-  },
-  {
-    day: '18', month: 'ABR', name: 'Dr. Andrés Mora',
-    spec: 'Cardiología', time: '2:00 pm',
-    dotBg: '#E6F1FB', dotColor: '#185FA5',
-    badgeBg: '#FAEEDA', badgeColor: '#566c8b', status: 'Pendiente',
-  },
+const doctoresEspecialidad = {
+  'Medicina General': 'Dra. Lucía Herrera',
+  'Pediatría': 'Dra. María Gómez',
+  'Odontología': 'Dr. Carlos Ruiz',
+  'Neurología': 'Dra. Elena Vargas',
+  'Ginecología': 'Dra. Sofia Castro',
+  'Cardiología': 'Dr. Andrés Mora'
+};
+
+const horariosDisponibles = [
+  { hora: '08:00 AM', libre: true }, { hora: '08:30 AM', libre: false },
+  { hora: '09:00 AM', libre: true }, { hora: '10:00 AM', libre: false },
+  { hora: '10:30 AM', libre: true }, { hora: '11:30 AM', libre: true },
+  { hora: '02:00 PM', libre: false }, { hora: '03:00 PM', libre: true },
+  { hora: '04:30 PM', libre: true }
 ];
 
-// ════════════════════════════════════════════════════════════════
 export default function Dashboard() {
   const [activeItem, setActiveItem] = useState('Inicio');
 
-  // ── NUEVOS ESTADOS AGREGADOS PARA CAPTURAR EL FORMULARIO ──────────
   const [especialidad, setEspecialidad] = useState('');
-  const [medicoId, setMedicoId] = useState('');
   const [fecha, setFecha] = useState('');
-  const [hora, setHora] = useState('');
+  const [horaSeleccionada, setHoraSeleccionada] = useState('');
   const [motivoConsulta, setMotivoConsulta] = useState('');
+  
+  const [misCitasLista, setMisCitasLista] = useState([
+    {
+      id: 1, paciente: 'Paciente Actual', especialidad: 'Medicina General',
+      medico: 'Dra. Lucía Herrera', fecha: '2026-06-15', hora: '10:30 AM',
+      motivo: 'Control general de rutina', estado: 'Confirmada'
+    }
+  ]);
 
-  // ── FUNCIÓN CONECTADA AL BACKEND EN PYTHON ────────────────────────
-  const handleAgendarCita = async () => {
-    // Validación básica de campos vacíos
-    if (!medicoId || !fecha || !hora || !motivoConsulta) {
-      alert("⚠️ Por favor completa todos los campos requeridos.");
+  const handleConfirmarCita = () => {
+    if (!especialidad || !fecha || !horaSeleccionada || !motivoConsulta) {
+      alert(" Por favor completa todos los campos y selecciona una hora disponible.");
       return;
     }
 
-    const datosCita = {
-      id_paciente: 1, // Reemplazar temporalmente con el ID del paciente logueado
-      id_medico: parseInt(medicoId),
+    const nuevaCita = {
+      id: Date.now(),
+      paciente: 'Paciente Actual',
+      especialidad: especialidad,
+      medico: doctoresEspecialidad[especialidad],
       fecha: fecha,
-      hora: hora,
-      motivo_consulta: motivoConsulta
+      hora: horaSeleccionada,
+      motivo: motivoConsulta,
+      estado: "Confirmada"
     };
 
-    try {
-      const respuesta = await fetch("http://localhost:8000/api/citas/agendar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(datosCita),
-      });
-
-      const data = await respuesta.json();
-
-      if (respuesta.ok && data.estado === "ok") {
-        alert("✅ ¡Cita guardada en la base de datos con éxito!");
-        
-        // Limpiamos los campos del formulario
-        setEspecialidad('');
-        setMedicoId('');
-        setFecha('');
-        setHora('');
-        setMotivoConsulta('');
-        
-        // Redireccionamos a la pantalla de Inicio
-        setActiveItem('Inicio');
-      } else {
-        alert("❌ Error del servidor: " + (data.detail || "No se pudo agendar la cita."));
-      }
-    } catch (error) {
-      console.error("Error de conexión:", error);
-      alert("❌ No se pudo establecer conexión con el servidor de Python.");
-    }
+    setMisCitasLista([nuevaCita, ...misCitasLista]);
+    alert("¡Cita registrada correctamente!");
+    
+    setEspecialidad('');
+    setFecha('');
+    setHoraSeleccionada('');
+    setMotivoConsulta('');
+    setActiveItem('Mis citas');
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: '#f5f5f3' }}>
-
-      {/* TOP BAR */}
-      <Box sx={{
-        height: 56, bgcolor: 'white', flexShrink: 0,
-        borderBottom: '0.5px solid rgba(0,0,0,0.1)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        position: 'relative',
-      }}>
+    // CONTENEDOR PRINCIPAL:
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', maxWidth: '80%', bgcolor: '#f5f5f3', overflow: 'hidden' }}>
+      
+      {/* HEADER */}
+      <Box sx={{ height: 56, width: '100%', bgcolor: 'white', flexShrink: 0, borderBottom: '1px solid rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Avatar sx={{ width: 28, height: 28, bgcolor: TEAL, borderRadius: '18px' }}>
+          <Avatar sx={{ width: 28, height: 28, bgcolor: TEAL, borderRadius: '6px' }}>
             <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
               <path d="M8 2C8 2 4 5 4 9a4 4 0 0 0 8 0c0-4-4-7-4-7z" fill="white" opacity="0.9"/>
               <path d="M6 8h4M8 6v4" stroke="#1D9E75" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </Avatar>
-          <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600, color: '#111', letterSpacing: '-0.3px' }}>
+          <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: NAVY, letterSpacing: '-0.3px' }}>
             Vitalix
           </Typography>
         </Box>
-        <Typography sx={{
-          position: 'absolute', bottom: 7, left: '50%', transform: 'translateX(-50%)',
-          fontSize: 10, color: '#445ba0', letterSpacing: '1px',
-          textTransform: 'uppercase', fontWeight: 500, whiteSpace: 'nowrap',
-        }}>
-          Salud y bienestar integral
-        </Typography>
       </Box>
 
-      {/* BODY */}
-      <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-
-        {/* SIDEBAR */}
-        <Box component="nav" sx={{
-          width: 200, flexShrink: 0, bgcolor: 'white',
-          borderRight: '0.5px solid rgba(0,0,0,0.1)',
-          display: 'flex', flexDirection: 'column',
-          py: 2, overflowY: 'auto',
-        }}>
+      <Box sx={{ display: 'flex', flexGrow: 1, width: '100%', overflow: 'hidden' }}>
+        
+        {/* MENÚ LATERAL */}
+        <Box component="nav" sx={{ width: 220, flexShrink: 0, bgcolor: 'white', borderRight: '1px solid rgba(0,0,0,0.08)', display: 'flex', flexDirection: 'column', py: 1.5, overflowY: 'auto' }}>
           {navSections.map((section, si) => (
             <React.Fragment key={section.label}>
-              {si > 0 && <Divider sx={{ mx: '12px', my: 1, borderColor: 'rgba(0,0,0,0.08)' }} />}
-              <Typography sx={{ px: '12px', pb: 1, pt: si === 0 ? 0 : 1, fontSize: 10, fontWeight: 500, letterSpacing: '0.8px', textTransform: 'uppercase', color: '#999' }}>
-                {section.label}
-              </Typography>
+              {si > 0 && <Divider sx={{ mx: 2, my: 1, borderColor: 'rgba(0,0,0,0.06)' }} />}
+              <Typography sx={{ px: 2.5, pb: 0.5, pt: si === 0 ? 0 : 1, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase', color: '#999' }}>{section.label}</Typography>
               <List disablePadding>
                 {section.items.map(item => {
                   const isActive = activeItem === item.text;
                   return (
-                    <ListItem
-                      key={item.text}
-                      onClick={() => setActiveItem(item.text)}
-                      sx={{
-                        px: 2, py: '9px', gap: '10px', cursor: 'pointer',
-                        borderLeft: isActive ? '2px solid #4f46c5' : '2px solid transparent',
-                        bgcolor: isActive ? '#E1F5EE' : 'transparent',
-                        color: isActive ? '#3d4c80' : '#555',
-                        fontWeight: isActive ? 500 : 400,
-                        '&:hover': { bgcolor: '#f5f5f3', color: '#111' },
-                        transition: 'all 0.15s',
-                      }}
-                    >
-                      <ListItemIcon sx={{ minWidth: 0, color: 'inherit', opacity: isActive ? 1 : 0.7 }}>
-                        {item.icon}
-                      </ListItemIcon>
-                      <ListItemText primary={item.text} primaryTypographyProps={{ fontSize: 13.5 }} />
+                    <ListItem key={item.text} onClick={() => setActiveItem(item.text)} sx={{ px: 2.5, py: 1, gap: 1, cursor: 'pointer', borderLeft: isActive ? `3px solid ${ACCENT}` : '3px solid transparent', bgcolor: isActive ? '#E1F5EE' : 'transparent', color: isActive ? NAVY : '#666', fontWeight: isActive ? 600 : 500, '&:hover': { bgcolor: '#f9f9f9', color: NAVY }, transition: 'all 0.2s' }}>
+                      <ListItemIcon sx={{ minWidth: 0, color: 'inherit', opacity: isActive ? 1 : 0.8 }}>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.text} primaryTypographyProps={{ fontSize: 13 }} />
                     </ListItem>
                   );
                 })}
               </List>
             </React.Fragment>
           ))}
-
-          <Divider sx={{ mx: '12px', my: 1, borderColor: 'rgba(0,0,0,0.08)' }} />
-
-          {[
-            { text: 'Mi perfil',     icon: <IcoUser />   },
-            { text: 'Cerrar sesión', icon: <IcoLogout /> },
-          ].map(item => {
-            const isActive = activeItem === item.text;
-            return (
-              <ListItem
-                key={item.text}
-                onClick={() => setActiveItem(item.text)}
-                sx={{
-                  px: 2, py: '9px', gap: '10px', cursor: 'pointer',
-                  borderLeft: isActive ? '2px solid #4f46c5' : '2px solid transparent',
-                  bgcolor: isActive ? '#E1F5EE' : 'transparent',
-                  color: isActive ? '#3d4c80' : '#555',
-                  '&:hover': { bgcolor: '#f5f5f3', color: '#111' },
-                  transition: 'all 0.15s',
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 0, color: 'inherit', opacity: isActive ? 1 : 0.7 }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.text} primaryTypographyProps={{ fontSize: 13.5 }} />
-              </ListItem>
-            );
-          })}
+          <Box sx={{ flexGrow: 1 }} />
+          <Divider sx={{ mx: 2, my: 1.5, borderColor: 'rgba(0,0,0,0.06)' }} />
+          {[ { text: 'Mi perfil', icon: <IcoUser /> }, { text: 'Cerrar sesión', icon: <IcoLogout /> } ].map(item => (
+            <ListItem key={item.text} onClick={() => setActiveItem(item.text)} sx={{ px: 2.5, py: 1, gap: 1, cursor: 'pointer', color: '#666', '&:hover': { bgcolor: '#f9f9f9', color: NAVY } }}>
+              <ListItemIcon sx={{ minWidth: 0, color: 'inherit', opacity: 0.8 }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} primaryTypographyProps={{ fontSize: 13 }} />
+            </ListItem>
+          ))}
         </Box>
 
-        {/* MAIN */}
-        <Box component="main" sx={{ flex: 1, overflowY: 'auto', p: '20px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {/* AREA PRINCIPAL: Ocupa todo el ancho restante */}
+        <Box component="main" sx={{ flexGrow: 1, width: 'calc(100% - 220px)', overflowY: 'auto' }}>
           
-          {activeItem === 'Inicio' ? (
-            <>
-              {/* Hero */}
-              <Box sx={{
-                background: 'linear-gradient(135deg, #066c83 0%, #6b8ae8 60%, #47469a 100%)',
-                borderRadius: 3, p: '28px 24px', color: 'white', position: 'relative', overflow: 'hidden',
-                '&::after':  { content: '""', position: 'absolute', right: -20, top: -20,  width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' },
-                '&::before': { content: '""', position: 'absolute', right: 40,  bottom: -30, width: 90,  height: 90,  borderRadius: '50%', background: 'rgba(255,255,255,0.05)' },
-              }}>
-                <Typography sx={{ fontSize: 11, letterSpacing: '1.2px', textTransform: 'uppercase', opacity: 0.8, mb: 1, fontWeight: 500 }}>
-                  Bienvenido
-                </Typography>
-                <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 600, mb: 1, lineHeight: 1.3 }}>
-                  Tu salud en<br />manos expertas
-                </Typography>
-                <Typography sx={{ fontSize: 13, opacity: 0.85, lineHeight: 1.5, mb: 2, maxWidth: 280 }}>
-                  Atención médica integral, tecnología de vanguardia y un equipo comprometido con tu bienestar.
-                </Typography>
-                <Button
-                  startIcon={<IcoCal />}
-                  onClick={() => setActiveItem('Agendar cita')}
-                  sx={{
-                    bgcolor: 'white', color: '#3d5b8d', borderRadius: 2,
-                    px: 2.25, py: 1.125, fontSize: 13, fontWeight: 500,
-                    textTransform: 'none',
-                    '&:hover': { bgcolor: '#f0f0f0' },
-                  }}
-                >
-                  Agendar cita médica
-                </Button>
-              </Box>
+          {/* CONTENEDOR CENTRAL PARA TODAS LAS PESTAÑAS */}
+          <Box
+            sx={{
+              width: '90%',
+              maxWidth: '1100px',
+              minWidth: '700px',
+              margin: '0 auto',
+              py: 4,
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            {activeItem === 'Inicio' ? (
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ background: 'linear-gradient(135deg, #066c83 0%, #6b8ae8 60%, #47469a 100%)', borderRadius: 3, p: 3, color: 'white', mb: 2.5 }}>
+                  <Typography sx={{ fontSize: 12, letterSpacing: '1.2px', textTransform: 'uppercase', opacity: 0.9, mb: 1, fontWeight: 600 }}>Bienvenido de nuevo</Typography>
+                  <Typography sx={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, mb: 1, lineHeight: 1.2 }}>Tu salud en<br />manos expertas</Typography>
+                  <Typography sx={{ fontSize: 14, opacity: 0.9, mb: 2.5, maxWidth: 400 }}>Atención médica integral y un equipo comprometido con tu bienestar.</Typography>
+                  <Button startIcon={<IcoCal />} onClick={() => setActiveItem('Agendar cita')} sx={{ bgcolor: 'white', color: '#3d5b8d', borderRadius: 2, px: 2.5, py: 1, fontSize: 13, fontWeight: 600, textTransform: 'none', '&:hover': { bgcolor: '#f0f0f0' } }}>
+                    Agendar cita médica
+                  </Button>
+                </Box>
 
-              {/* Tarjetas de servicios */}
-              <Grid container spacing={1.5}>
-                {serviceCards.map(card => (
-                  <Grid item xs={4} key={card.label}>
-                    <Paper variant="outlined" sx={{ borderRadius: 3, p: 2, borderColor: 'rgba(0,0,0,0.1)' }}>
-                      <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1.25 }}>
+                {/* TARJETAS DE SERVICIOS EXPANDIDAS */}
+                <Box sx={{ display: 'flex', gap: 2, width: '100%', flexDirection: { xs: 'column', sm: 'row' } }}>
+                  {serviceCards.map(card => (
+                    <Paper 
+                      key={card.label}
+                      elevation={0} 
+                      sx={{ 
+                        flex: 1, 
+                        borderRadius: 2.5, 
+                        p: 2.5, 
+                        border: '1px solid rgba(0,0,0,0.08)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        transition: 'all 0.2s',
+                        '&:hover': { bgcolor: '#fafafa', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }
+                      }}
+                    >
+                      <Box sx={{ width: 36, height: 36, borderRadius: 1.5, bgcolor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1.5 }}>
                         {card.icon}
                       </Box>
-                      <Typography sx={{ fontSize: 12, fontWeight: 500, color: '#111', mb: 0.5 }}>{card.label}</Typography>
-                      <Typography sx={{ fontSize: 11, color: '#666', lineHeight: 1.4 }}>{card.sub}</Typography>
+                      <Typography sx={{ fontSize: 14, fontWeight: 600, color: NAVY, mb: 0.5 }}>{card.label}</Typography>
+                      <Typography sx={{ fontSize: 12, color: '#666' }}>{card.sub}</Typography>
                     </Paper>
-                  </Grid>
-                ))}
-              </Grid>
-
-              {/* Próximas citas */}
-              <Paper variant="outlined" sx={{ borderRadius: 3, p: 2, borderColor: 'rgba(0,0,0,0.1)' }}>
-                <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#111', mb: 1.5 }}>Próximas citas</Typography>
-                {appointments.map((appt, idx) => (
-                  <React.Fragment key={appt.name}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 1.25 }}>
-                      <Box sx={{
-                        width: 36, height: 36, borderRadius: 2,
-                        bgcolor: appt.dotBg, color: appt.dotColor,
-                        display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0,
-                      }}>
-                        <span style={{ fontSize: 13, fontWeight: 600, lineHeight: 1 }}>{appt.day}</span>
-                        <span style={{ fontSize: 9 }}>{appt.month}</span>
-                      </Box>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography sx={{ fontSize: 13, fontWeight: 500, color: '#111' }}>{appt.name}</Typography>
-                        <Typography sx={{ fontSize: 11, color: '#666' }}>{appt.spec}</Typography>
-                      </Box>
-                      <Box sx={{ textAlign: 'right' }}>
-                        <Typography sx={{ fontSize: 12, color: '#999' }}>{appt.time}</Typography>
-                        <Chip
-                          label={appt.status}
-                          size="small"
-                          sx={{
-                            fontSize: 10, height: 20, mt: 0.25,
-                            bgcolor: appt.badgeBg, color: appt.badgeColor,
-                            fontWeight: 500, borderRadius: '20px',
-                          }}
-                        />
-                      </Box>
-                    </Box>
-                    {idx < appointments.length - 1 && (
-                      <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
-                    )}
-                  </React.Fragment>
-                ))}
-              </Paper>
-            </>
-          ) : activeItem === 'Agendar cita' ? (
-            /* Vista de "Agendar cita" totalmente integrada y estilizada */
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-              
-              {/* Banner superior de sección */}
-              <Paper 
-                elevation={0} 
-                sx={{ 
-                  p: 3, 
-                  borderRadius: 3, 
-                  background: `linear-gradient(135deg, ${TEAL} 0%, ${NAVY} 100%)`, 
-                  color: 'white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2
-                }}
-              >
-                <Box sx={{ bgcolor: 'rgba(255,255,255,0.15)', p: 1.25, borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <IcoCalPlus />
+                  ))}
                 </Box>
-                <Box>
-                  <Typography sx={{ fontSize: 16, fontWeight: 600 }}>Agendar Nueva Cita</Typography>
-                  <Typography sx={{ fontSize: 12, opacity: 0.85 }}>Completa los datos solicitados para reservar tu espacio médico de atención.</Typography>
-                </Box>
-              </Paper>
+              </Box>
 
-              <Grid container spacing={2}>
-                {/* Bloque Izquierdo: Formulario */}
-                <Grid item xs={12} md={8}>
-                  <Paper variant="outlined" sx={{ borderRadius: 3, p: 3, borderColor: 'rgba(0,0,0,0.1)', bgcolor: 'white' }}>
-                    <Typography sx={{ fontSize: 14, fontWeight: 600, color: '#111', mb: 2.5 }}>Detalles de la Consulta</Typography>
-                    
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>ESPECIALIDAD MÉDICA</Typography>
-                        <TextField select fullWidth value={especialidad} onChange={(e) => setEspecialidad(e.target.value)} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }}>
-                          <MenuItem value="general">Medicina General</MenuItem>
-                          <MenuItem value="cardio">Cardiología</MenuItem>
-                          <MenuItem value="pediatria">Pediatría</MenuItem>
-                        </TextField>
-                      </Grid>
+            ) : activeItem === 'Agendar cita' ? (
+              <Box sx={{ width: '100%' }}>
+                <Paper elevation={0} sx={{ p: 2, mb: 2.5, borderRadius: 2.5, background: `linear-gradient(135deg, ${TEAL} 0%, ${NAVY} 100%)`, color: 'white', display: 'flex', alignItems: 'center', gap: 1.5, width: '100%', boxSizing: 'border-box' }}>
+                  <Box sx={{ bgcolor: 'rgba(255,255,255,0.15)', p: 1, borderRadius: 1.5, display: 'flex' }}><IcoCalPlus /></Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 16, fontWeight: 600 }}>Nueva Cita y Triaje</Typography>
+                    <Typography sx={{ fontSize: 12, opacity: 0.85 }}>Selecciona tu especialidad, fecha y verifica la disponibilidad.</Typography>
+                  </Box>
+                </Paper>
 
-                      <Grid item xs={12} sm={6}>
-                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>MÉDICO ASIGNADO</Typography>
-                        <TextField select fullWidth value={medicoId} onChange={(e) => setMedicoId(e.target.value)} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }}>
-                          {/* Cambié los string 'lucia' y 'andres' por los IDs numéricos 1 y 2 que espera tu base de datos */}
-                          <MenuItem value={1}>Dra. Lucía Herrera</MenuItem>
-                          <MenuItem value={2}>Dr. Andrés Mora</MenuItem>
-                        </TextField>
-                      </Grid>
+                <Paper variant="outlined" sx={{ borderRadius: 2.5, p: 3, borderColor: 'rgba(0,0,0,0.08)', bgcolor: 'white', width: '100%', boxSizing: 'border-box' }}>
+                  <Box sx={{ bgcolor: '#E1F5EE', p: 1.5, borderRadius: 1.5, mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ color: '#0e5e8a', display: 'flex' }}><IcoClock /></Box>
+                    <Typography sx={{ fontSize: 12.5, color: '#0e5e8a', fontWeight: 500 }}>
+                      <strong>Información:</strong> Las casillas grises están ocupadas. Selecciona las azules.
+                    </Typography>
+                  </Box>
 
-                      <Grid item xs={12} sm={6}>
-                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>FECHA REQUERIDA</Typography>
-                        <TextField fullWidth type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} InputLabelProps={{ shrink: true }} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }} />
-                      </Grid>
-
-                      <Grid item xs={12} sm={6}>
-                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>HORA DISPONIBLE</Typography>
-                        <TextField fullWidth type="time" value={hora} onChange={(e) => setHora(e.target.value)} InputLabelProps={{ shrink: true }} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }} />
-                      </Grid>
-
-                      {/* NUEVO CAMPO: Motivo de consulta (obligatorio para la petición a Python) */}
-                      <Grid item xs={12}>
-                        <Typography sx={{ fontSize: 11, fontWeight: 600, color: '#666', mb: 0.75, letterSpacing: '0.5px' }}>MOTIVO DE LA CONSULTA</Typography>
-                        <TextField fullWidth multiline rows={2} placeholder="Escribe brevemente la razón de tu cita médica..." value={motivoConsulta} onChange={(e) => setMotivoConsulta(e.target.value)} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: '#fcfcfc' } }} />
-                      </Grid>
+                  <Grid container spacing={2.5}>
+                    <Grid item xs={12}>
+                      <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#666', mb: 0.5, letterSpacing: '0.5px' }}>ESPECIALIDAD MÉDICA</Typography>
+                      <TextField select fullWidth value={especialidad} onChange={(e) => setEspecialidad(e.target.value)} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5, bgcolor: '#fcfcfc' } }}>
+                        <MenuItem value="Medicina General">Medicina General</MenuItem>
+                        <MenuItem value="Pediatría">Pediatría</MenuItem>
+                        <MenuItem value="Odontología">Odontología</MenuItem>
+                        <MenuItem value="Neurología">Neurología</MenuItem>
+                        <MenuItem value="Ginecología">Ginecología</MenuItem>
+                        <MenuItem value="Cardiología">Cardiología</MenuItem>
+                      </TextField>
                     </Grid>
 
-                    <Divider sx={{ my: 3, borderColor: 'rgba(0,0,0,0.08)' }} />
-
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1.5 }}>
-                      <Button variant="text" sx={{ textTransform: 'none', color: '#666', fontSize: 13 }} onClick={() => setActiveItem('Inicio')}>
-                        Cancelar
-                      </Button>
-                      <Button variant="contained" onClick={handleAgendarCita} sx={{ bgcolor: ACCENT, textTransform: 'none', borderRadius: 2, fontSize: 13, px: 3, '&:hover': { bgcolor: '#055466' } }}>
-                        Confirmar Turno
-                      </Button>
-                    </Box>
-                  </Paper>
-                </Grid>
-
-                {/* Bloque Derecho: Paneles informativos con la misma paleta */}
-                <Grid item xs={12} md={4}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                    <Paper variant="outlined" sx={{ borderRadius: 3, p: 2.5, bgcolor: '#E1F5EE', borderColor: 'transparent' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                        <Box sx={{ color: '#0e5e8a', display: 'flex' }}><IcoClock /></Box>
-                        <Typography sx={{ fontSize: 13, fontWeight: 600, color: '#0e5e8a' }}>Información Clave</Typography>
+                    <Grid item xs={12}>
+                      <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#666', mb: 0.5, letterSpacing: '0.5px' }}>MÉDICO ASIGNADO AUTOMÁTICAMENTE</Typography>
+                      <Box sx={{ p: 1, bgcolor: BEIGE, borderRadius: 1.5, border: '1px solid rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', height: '40px', boxSizing: 'border-box' }}>
+                        <Typography sx={{ fontSize: 13, color: especialidad ? NAVY : '#888', fontWeight: especialidad ? 600 : 400 }}>
+                          {especialidad ? doctoresEspecialidad[especialidad] : 'Selecciona una especialidad...'}
+                        </Typography>
                       </Box>
-                      <Typography sx={{ fontSize: 11.5, color: '#445ba0', lineHeight: 1.5 }}>
-                        Las citas agendadas pueden gestionarse, cancelarse o modificarse desde el apartado de "Mis citas" con al menos 24 horas de antelación.
-                      </Typography>
-                    </Paper>
+                    </Grid>
 
-                    <Paper variant="outlined" sx={{ borderRadius: 3, p: 2.5, bgcolor: BEIGE, borderColor: 'transparent' }}>
-                      <Typography sx={{ fontSize: 13, fontWeight: 600, color: NAVY, mb: 0.5 }}>¿Soporte Directo?</Typography>
-                      <Typography sx={{ fontSize: 11.5, color: '#555', lineHeight: 1.4, mb: 1 }}>Si presentas inconvenientes en la asignación de turnos web, contacta directamente a nuestra central de atención.</Typography>
-                      <Typography component="a" href="#" sx={{ fontSize: 11.5, fontWeight: 600, color: ACCENT, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
-                        Línea de atención médica →
-                      </Typography>
-                    </Paper>
+                    <Grid item xs={12}>
+                      <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#666', mb: 0.5, letterSpacing: '0.5px' }}>SÍNTOMAS / MOTIVO DE LA CONSULTA</Typography>
+                      <TextField fullWidth multiline rows={2} placeholder="Indica brevemente tus síntomas..." value={motivoConsulta} onChange={(e) => setMotivoConsulta(e.target.value)} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5, bgcolor: '#fcfcfc' } }} />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Divider sx={{ my: 0.5, borderColor: 'rgba(0,0,0,0.06)' }} />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#666', mb: 0.5, letterSpacing: '0.5px' }}>SELECCIONAR FECHA</Typography>
+                      <TextField fullWidth type="date" value={fecha} onChange={(e) => {setFecha(e.target.value); setHoraSeleccionada('');}} InputLabelProps={{ shrink: true }} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5, bgcolor: '#fcfcfc' } }} />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#666', mb: 0.5, letterSpacing: '0.5px' }}>HORARIOS DISPONIBLES</Typography>
+                      {!fecha ? (
+                        <Typography sx={{ fontSize: 12.5, color: '#888', fontStyle: 'italic', pt: 0.5 }}>Selecciona un día en el calendario.</Typography>
+                      ) : (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, pt: 0.5 }}>
+                          {horariosDisponibles.map((slot, idx) => (
+                            <Chip 
+                              key={idx} label={slot.hora} size="small" disabled={!slot.libre} onClick={() => slot.libre && setHoraSeleccionada(slot.hora)}
+                              sx={{ 
+                                borderRadius: '6px', fontWeight: 600, fontSize: 11.5,
+                                bgcolor: !slot.libre ? '#eee' : (horaSeleccionada === slot.hora ? ACCENT : '#E6F1FB'),
+                                color: !slot.libre ? '#aaa' : (horaSeleccionada === slot.hora ? 'white' : NAVY),
+                                '&:hover': { bgcolor: slot.libre ? (horaSeleccionada === slot.hora ? ACCENT : SKY) : '#eee' }
+                              }} 
+                            />
+                          ))}
+                        </Box>
+                      )}
+                    </Grid>
+                  </Grid>
+
+                  <Divider sx={{ my: 3, borderColor: 'rgba(0,0,0,0.06)' }} />
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1.5 }}>
+                    <Button variant="text" size="medium" sx={{ textTransform: 'none', color: '#666', fontWeight: 600 }} onClick={() => setActiveItem('Inicio')}>Cancelar</Button>
+                    <Button variant="contained" size="medium" onClick={handleConfirmarCita} sx={{ bgcolor: ACCENT, textTransform: 'none', borderRadius: 1.5, px: 3, fontWeight: 600, fontSize: 13.5, '&:hover': { bgcolor: '#055466' } }}>
+                      Confirmar Turno
+                    </Button>
                   </Box>
-                </Grid>
-              </Grid>
-            </Box>
-          ) : (
-            /* Fallback limpio para el resto de pestañas */
-            <Paper variant="outlined" sx={{ borderRadius: 3, p: 4, borderColor: 'rgba(0,0,0,0.1)', bgcolor: 'white', textAlign: 'center' }}>
-              <Typography sx={{ fontSize: 14, color: '#666' }}>
-                Sección en desarrollo: <strong>{activeItem}</strong>
-              </Typography>
-              <Button size="small" sx={{ mt: 2, textTransform: 'none', bgcolor: TEAL, color: 'white', '&:hover': { bgcolor: NAVY } }} onClick={() => setActiveItem('Inicio')}>
-                Regresar al Inicio
-              </Button>
-            </Paper>
-          )}
+                </Paper>
+              </Box>
 
+            ) : activeItem === 'Mis citas' ? (
+              <Box sx={{ width: '100%' }}>
+                <Paper elevation={0} sx={{ p: 2, mb: 2.5, borderRadius: 2.5, background: `linear-gradient(135deg, ${TEAL} 0%, ${NAVY} 100%)`, color: 'white', display: 'flex', alignItems: 'center', gap: 1.5, width: '100%', boxSizing: 'border-box' }}>
+                  <Box sx={{ bgcolor: 'rgba(255,255,255,0.15)', p: 1, borderRadius: 1.5, display: 'flex' }}><IcoList /></Box>
+                  <Box>
+                    <Typography sx={{ fontSize: 16, fontWeight: 600 }}>Historial de Mis Citas</Typography>
+                    <Typography sx={{ fontSize: 12, opacity: 0.85 }}>Revisa y gestiona tus consultas médicas programadas.</Typography>
+                  </Box>
+                </Paper>
+                
+                <Paper variant="outlined" sx={{ borderRadius: 2.5, p: 3, borderColor: 'rgba(0,0,0,0.08)', bgcolor: 'white', width: '100%', boxSizing: 'border-box' }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, width: '100%' }}>
+                    {misCitasLista.length === 0 ? (
+                      <Box sx={{ p: 4, textAlign: 'center' }}>
+                        <Typography sx={{ color: '#666', fontSize: 14 }}>No registras citas activas en el sistema.</Typography>
+                      </Box>
+                    ) : (
+                      misCitasLista.map((cita) => (
+                        <Paper key={cita.id} variant="outlined" sx={{ 
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          borderRadius: 2.5, 
+                          p: 2.5, 
+                          borderColor: 'rgba(0,0,0,0.1)', 
+                          bgcolor: '#fcfcfc', 
+                          borderLeft: `5px solid ${ACCENT}`,
+                          display: 'flex',
+                          alignItems: 'center', 
+                          justifyContent: 'space-between',
+                          transition: '0.2s', '&:hover': { bgcolor: 'white', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }
+                        }}>
+                          <Box sx={{ display: 'flex', gap: 2.5, alignItems: 'center', flexGrow: 1 }}>
+                            <Box sx={{ bgcolor: BEIGE, px: 2, py: 1.5, borderRadius: 2, textAlign: 'center', minWidth: 80 }}>
+                              <Typography sx={{ color: NAVY, fontWeight: 800, fontSize: 18, lineHeight: 1 }}>{cita.fecha.split('-')[2] || '15'}</Typography>
+                              <Typography sx={{ color: '#888', fontSize: 11, fontWeight: 700, mt: 0.5 }}>FECHA</Typography>
+                            </Box>
+                            <Box>
+                              <Typography sx={{ fontSize: 18, fontWeight: 800, color: NAVY, mb: 0.5 }}>{cita.especialidad}</Typography>
+                              <Typography sx={{ fontSize: 13, color: '#666', mb: 1 }}>Motivo: <i>{cita.motivo}</i></Typography>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Avatar sx={{ width: 24, height: 24, bgcolor: TEAL }}><IcoUser/></Avatar>
+                                <Typography sx={{ fontSize: 13, fontWeight: 700, color: NAVY }}>{cita.medico}</Typography>
+                                <Typography sx={{ fontSize: 12, color: '#999', ml: 0.5 }}>• {cita.paciente}</Typography>
+                              </Box>
+                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1, minWidth: 120 }}>
+                            <Chip label={cita.estado} size="small" sx={{ bgcolor: '#E1F5EE', color: '#0e5e8a', fontSize: 11, fontWeight: 700, borderRadius: 1 }} />
+                            <Typography sx={{ fontWeight: 700, color: NAVY, display: 'flex', alignItems: 'center', gap: 0.5, fontSize: 15, mt: 0.5 }}>
+                              <IcoClock /> {cita.hora}
+                            </Typography>
+                          </Box>
+                        </Paper>
+                      ))
+                    )}
+                  </Box>
+                </Paper>
+              </Box>
+
+            ) : (
+              <Paper variant="outlined" sx={{ borderRadius: 2.5, p: 3, borderColor: 'rgba(0,0,0,0.1)', bgcolor: 'white', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}>
+                <Typography sx={{ fontSize: 14, color: '#666' }}>Sección en desarrollo: <strong>{activeItem}</strong></Typography>
+                <Button size="medium" sx={{ mt: 1.5, textTransform: 'none', bgcolor: TEAL, color: 'white', '&:hover': { bgcolor: NAVY } }} onClick={() => setActiveItem('Inicio')}>Regresar al Inicio</Button>
+              </Paper>
+            )}
+
+          </Box>
         </Box>
       </Box>
     </Box>
   );
-} 
+}   

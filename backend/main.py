@@ -99,11 +99,10 @@ def agendar_cita(datos: CitaNueva):
         )
         
         # Guardamos en la base de datos (asumiendo que tu Gestor expone 'sesion')
-        db.sesion.add(nueva_cita)
-        db.sesion.commit()
-        
-        return {"mensaje": "Cita agendada exitosamente", "estado": "ok"}
-        
+       # db.sesion.add(nueva_cita)
+        #db.sesion.commit()
+        db.insertar(nueva_cita)
+        return {"mensaje": "Cita agendada exitosamente", "estado": "ok"} 
     except Exception as e:
         db.sesion.rollback()
         raise HTTPException(status_code=500, detail=f"Error al guardar la cita: {str(e)}")
